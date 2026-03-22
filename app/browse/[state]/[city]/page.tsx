@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import SaleCard from '@/components/SaleCard';
+import SaleMap from '@/components/SaleMap';
 import { supabase } from '@/lib/supabase';
 import { US_STATES } from '@/lib/types';
 
@@ -68,6 +69,13 @@ export default async function CityPage({ params }: Props) {
       <p className="text-gray-500 mb-8">
         {sales.length} upcoming sale{sales.length !== 1 ? 's' : ''}
       </p>
+
+      {/* Map */}
+      {sales.length > 0 && (
+        <div className="card overflow-hidden mb-8">
+          <SaleMap sales={sales} zoom={12} className="h-[400px]" />
+        </div>
+      )}
 
       {sales.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

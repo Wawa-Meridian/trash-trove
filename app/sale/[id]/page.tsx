@@ -10,6 +10,7 @@ import ShareButtons from '@/components/ShareButtons';
 import ContactForm from '@/components/ContactForm';
 import FavoriteButton from '@/components/FavoriteButton';
 import ReportButton from '@/components/ReportButton';
+import SaleMap from '@/components/SaleMap';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -165,6 +166,14 @@ export default async function SaleDetailPage({ params }: Props) {
                 </div>
               </div>
             </div>
+            {sale.latitude && sale.longitude && (
+              <div className="mt-3 rounded-lg overflow-hidden">
+                <SaleMap
+                  singleMarker={{ lat: sale.latitude, lng: sale.longitude, title: sale.title }}
+                  className="h-[200px]"
+                />
+              </div>
+            )}
           </div>
 
           {/* Seller */}

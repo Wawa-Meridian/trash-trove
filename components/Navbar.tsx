@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, MapPin, Plus, Heart } from 'lucide-react';
+import { Menu, X, MapPin, Plus, Heart, Locate } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
 
 export default function Navbar() {
@@ -21,6 +21,13 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-6">
+            <Link
+              href="/nearby"
+              className="flex items-center gap-1.5 text-gray-600 hover:text-treasure-700 transition-colors"
+            >
+              <Locate size={18} />
+              Near Me
+            </Link>
             <Link
               href="/browse"
               className="flex items-center gap-1.5 text-gray-600 hover:text-treasure-700 transition-colors"
@@ -55,6 +62,14 @@ export default function Navbar() {
         {/* Mobile nav */}
         {isOpen && (
           <div className="md:hidden pb-4 space-y-2">
+            <Link
+              href="/nearby"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"
+              onClick={() => setIsOpen(false)}
+            >
+              <Locate size={18} />
+              Near Me
+            </Link>
             <Link
               href="/browse"
               className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"

@@ -22,6 +22,11 @@ export default function Footer() {
             <h3 className="font-semibold text-white mb-3">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               <li>
+                <Link href="/nearby" className="hover:text-white transition-colors">
+                  Near Me
+                </Link>
+              </li>
+              <li>
                 <Link href="/browse" className="hover:text-white transition-colors">
                   Browse Sales
                 </Link>

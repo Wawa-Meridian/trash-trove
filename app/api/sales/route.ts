@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { rateLimit } from '@/lib/rate-limit';
+import { geocodeAddress } from '@/lib/geocode';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
@@ -112,6 +113,25 @@ export async function POST(req: NextRequest) {
 
   if (saleError) {
     return NextResponse.json({ error: saleError.message }, { status: 500 });
+  }
+
+  // Geocode the address and update coordinates
+  const coords = await geocodeAddress(
+    sale.address,
+    sale.city,
+    sale.state,
+    sale.zip
+  );
+
+  if (coords) {
+    const { error: geoError } = await supabase
+      .from('garage_sales')
+      .update({ latitude: coords.latitude, longitude: coords.longitude })
+      .eq('id', sale.id);
+
+    if (geoError) {
+      console.error('Failed to update coordinates:', geoError);
+    }
   }
 
   // Insert photos

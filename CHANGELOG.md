@@ -4,6 +4,20 @@ All notable changes to TrashTrove will be documented in this file.
 
 Format follows [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] - 2026-03-22
+
+### Added
+
+- Interactive maps on browse-by-state, browse-by-city, and sale detail pages (Leaflet + OpenStreetMap)
+- "Near Me" page with browser geolocation to find nearby sales within configurable radius
+- Nearby sales API endpoint using Haversine distance calculation
+- Automatic geocoding of addresses on sale creation via Nominatim (free, no API key)
+- Map markers with popups linking to sale details
+- Locate-me button on maps to re-center on user position
+- Distance badges on nearby sale cards (e.g., "2.3 mi away")
+- Radius selector (10, 25, 50, 100 miles) on nearby page
+- Navigation links for "Near Me" in navbar and footer
+
 ## [0.3.0] - 2026-03-22
 
 ### Added
