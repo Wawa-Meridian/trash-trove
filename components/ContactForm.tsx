@@ -45,12 +45,12 @@ export default function ContactForm({ saleId, sellerName }: ContactFormProps) {
 
   if (sent) {
     return (
-      <div className="bg-green-50 rounded-xl border border-green-200 p-5 space-y-2">
-        <div className="flex items-center gap-2 text-green-700 font-semibold">
+      <div className="bg-green-50 dark:bg-green-900/20 rounded-xl border border-green-200 dark:border-green-800 p-5 space-y-2">
+        <div className="flex items-center gap-2 text-green-700 dark:text-green-400 font-semibold">
           <CheckCircle size={18} />
           Message Sent
         </div>
-        <p className="text-green-600 text-sm">
+        <p className="text-green-600 dark:text-green-500 text-sm">
           Your message has been sent to {sellerName}. They will get back to you via email.
         </p>
       </div>
@@ -70,9 +70,9 @@ export default function ContactForm({ saleId, sellerName }: ContactFormProps) {
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5 space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="font-semibold text-gray-900 flex items-center gap-2">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
           <MessageCircle size={18} className="text-treasure-600" />
           Contact {sellerName}
         </h3>
@@ -87,7 +87,7 @@ export default function ContactForm({ saleId, sellerName }: ContactFormProps) {
 
       <form onSubmit={handleSubmit} className="space-y-3">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Your Name
           </label>
           <input
@@ -99,7 +99,7 @@ export default function ContactForm({ saleId, sellerName }: ContactFormProps) {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Your Email
           </label>
           <input
@@ -112,7 +112,7 @@ export default function ContactForm({ saleId, sellerName }: ContactFormProps) {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
             Message
           </label>
           <textarea
@@ -126,7 +126,7 @@ export default function ContactForm({ saleId, sellerName }: ContactFormProps) {
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-700 px-3 py-2 rounded-lg text-sm">
+          <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-3 py-2 rounded-lg text-sm">
             {error}
           </div>
         )}

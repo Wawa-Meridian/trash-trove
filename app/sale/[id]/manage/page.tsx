@@ -2,9 +2,10 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, useRouter } from 'next/navigation';
-import { Edit, Trash2, Loader2, CheckCircle, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { Edit, Trash2, Loader2, CheckCircle, AlertTriangle, ArrowLeft, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { SALE_CATEGORIES, US_STATES } from '@/lib/types';
+import { useAuth } from '@/components/AuthProvider';
 
 interface SaleData {
   id: string;
@@ -20,12 +21,21 @@ interface SaleData {
   end_time: string;
   seller_name: string;
   seller_email: string;
+  user_id: string | null;
+  sale_dates?: { id: string; sale_date: string; start_time: string; end_time: string }[];
+}
+
+interface DateRow {
+  date: string;
+  start_time: string;
+  end_time: string;
 }
 
 export default function ManageSalePage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { user } = useAuth();
   const id = params.id as string;
   const token = searchParams.get('token');
 
@@ -38,6 +48,10 @@ export default function ManageSalePage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [formData, setFormData] = useState<Partial<SaleData>>({});
+  const [saleDates, setSaleDates] = useState<DateRow[]>([]);
+
+  // Auth mode: user owns the sale, or token-based
+  const isAuthMode = !token && !!user;
 
   const fetchSale = useCallback(async () => {
     try {
@@ -47,6 +61,14 @@ export default function ManageSalePage() {
         return;
       }
       const { sale: saleData } = await res.json();
+
+      // Verify access
+      if (!token && (!user || saleData.user_id !== user.id)) {
+        setError('You do not have permission to manage this listing');
+        setLoading(false);
+        return;
+      }
+
       setSale(saleData);
       setFormData({
         title: saleData.title,
@@ -62,21 +84,39 @@ export default function ManageSalePage() {
         seller_name: saleData.seller_name,
         seller_email: saleData.seller_email,
       });
+
+      // Populate multi-day dates
+      if (saleData.sale_dates?.length > 0) {
+        setSaleDates(
+          saleData.sale_dates
+            .sort((a: any, b: any) => new Date(a.sale_date).getTime() - new Date(b.sale_date).getTime())
+            .map((d: any) => ({
+              date: d.sale_date,
+              start_time: d.start_time,
+              end_time: d.end_time,
+            }))
+        );
+      } else {
+        setSaleDates([{
+          date: saleData.sale_date,
+          start_time: saleData.start_time,
+          end_time: saleData.end_time,
+        }]);
+      }
     } catch {
       setError('Failed to load sale');
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, token, user]);
 
   useEffect(() => {
-    if (!token) {
-      setError('No manage token provided');
-      setLoading(false);
+    if (!token && !user) {
+      // Wait for auth to resolve
       return;
     }
     fetchSale();
-  }, [token, fetchSale]);
+  }, [token, user, fetchSale]);
 
   const updateField = (field: string, value: unknown) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -90,16 +130,44 @@ export default function ManageSalePage() {
     updateField('categories', updated);
   };
 
+  const addDateRow = () => {
+    if (saleDates.length >= 7) return;
+    const last = saleDates[saleDates.length - 1];
+    const nextDay = new Date(last.date);
+    nextDay.setDate(nextDay.getDate() + 1);
+    setSaleDates([
+      ...saleDates,
+      { date: nextDay.toISOString().split('T')[0], start_time: last.start_time, end_time: last.end_time },
+    ]);
+  };
+
+  const removeDateRow = (index: number) => {
+    if (saleDates.length <= 1) return;
+    setSaleDates(saleDates.filter((_, i) => i !== index));
+  };
+
+  const updateDateRow = (index: number, field: keyof DateRow, value: string) => {
+    setSaleDates(saleDates.map((row, i) => (i === index ? { ...row, [field]: value } : row)));
+  };
+
   const handleSave = async () => {
     setSaving(true);
     setError(null);
     setSuccess(null);
 
     try {
+      const body: Record<string, unknown> = {
+        ...formData,
+        sale_date: saleDates[0]?.date,
+        start_time: saleDates[0]?.start_time,
+        end_time: saleDates[0]?.end_time,
+      };
+      if (token) body.manage_token = token;
+
       const res = await fetch(`/api/sales/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, manage_token: token }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {
@@ -121,10 +189,13 @@ export default function ManageSalePage() {
     setError(null);
 
     try {
+      const body: Record<string, unknown> = {};
+      if (token) body.manage_token = token;
+
       const res = await fetch(`/api/sales/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ manage_token: token }),
+        body: JSON.stringify(body),
       });
 
       if (!res.ok) {
@@ -132,7 +203,11 @@ export default function ManageSalePage() {
         throw new Error(data.error ?? 'Failed to delete sale');
       }
 
-      router.push('/');
+      if (isAuthMode) {
+        router.push('/dashboard');
+      } else {
+        router.push('/');
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to delete sale';
       setError(message);
@@ -150,16 +225,16 @@ export default function ManageSalePage() {
     );
   }
 
-  if (!sale || !token) {
+  if (!sale || (!token && !isAuthMode)) {
     return (
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="bg-red-50 text-red-700 px-6 py-4 rounded-lg flex items-center gap-3">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-6 py-4 rounded-lg flex items-center gap-3">
           <AlertTriangle size={20} />
           <span>{error ?? 'Unable to load this sale. Check your manage link.'}</span>
         </div>
-        <Link href="/" className="btn-secondary inline-flex items-center gap-2 mt-6">
+        <Link href={isAuthMode ? '/dashboard' : '/'} className="btn-secondary inline-flex items-center gap-2 mt-6">
           <ArrowLeft size={16} />
-          Back to Home
+          {isAuthMode ? 'Back to Dashboard' : 'Back to Home'}
         </Link>
       </div>
     );
@@ -169,23 +244,23 @@ export default function ManageSalePage() {
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-center gap-3 mb-2">
         <Edit size={24} className="text-treasure-600" />
-        <h1 className="font-display text-3xl font-bold text-gray-900">
+        <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-gray-100">
           Manage Your Listing
         </h1>
       </div>
-      <p className="text-gray-500 mb-8">
+      <p className="text-gray-500 dark:text-gray-400 mb-8">
         Edit your sale details or remove the listing.
       </p>
 
       {error && (
-        <div className="bg-red-50 text-red-700 px-4 py-3 rounded-lg text-sm mb-6 flex items-center gap-2">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-4 py-3 rounded-lg text-sm mb-6 flex items-center gap-2">
           <AlertTriangle size={16} />
           {error}
         </div>
       )}
 
       {success && (
-        <div className="bg-green-50 text-green-700 px-4 py-3 rounded-lg text-sm mb-6 flex items-center gap-2">
+        <div className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-4 py-3 rounded-lg text-sm mb-6 flex items-center gap-2">
           <CheckCircle size={16} />
           {success}
         </div>
@@ -194,10 +269,10 @@ export default function ManageSalePage() {
       <div className="space-y-8">
         {/* Basic Info */}
         <section className="space-y-4">
-          <h2 className="font-semibold text-lg text-gray-900">Basic Info</h2>
+          <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Basic Info</h2>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Sale Title
             </label>
             <input
@@ -208,7 +283,7 @@ export default function ManageSalePage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Description
             </label>
             <textarea
@@ -222,7 +297,7 @@ export default function ManageSalePage() {
 
         {/* Categories */}
         <section>
-          <h2 className="font-semibold text-lg text-gray-900 mb-3">
+          <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-3">
             What Are You Selling?
           </h2>
           <div className="flex flex-wrap gap-2">
@@ -234,7 +309,7 @@ export default function ManageSalePage() {
                 className={`px-3 py-1.5 rounded-full text-sm font-medium border transition-all ${
                   formData.categories?.includes(cat)
                     ? 'bg-treasure-600 text-white border-treasure-600'
-                    : 'bg-white text-gray-600 border-gray-300 hover:border-treasure-400'
+                    : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-treasure-400'
                 }`}
               >
                 {cat}
@@ -245,10 +320,10 @@ export default function ManageSalePage() {
 
         {/* Location */}
         <section className="space-y-4">
-          <h2 className="font-semibold text-lg text-gray-900">Location</h2>
+          <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Location</h2>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Street Address
             </label>
             <input
@@ -260,7 +335,7 @@ export default function ManageSalePage() {
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 City
               </label>
               <input
@@ -270,7 +345,7 @@ export default function ManageSalePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 State
               </label>
               <select
@@ -289,7 +364,7 @@ export default function ManageSalePage() {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 ZIP Code
               </label>
               <input
@@ -301,54 +376,71 @@ export default function ManageSalePage() {
           </div>
         </section>
 
-        {/* Date & Time */}
+        {/* Date & Time — Multi-day */}
         <section className="space-y-4">
-          <h2 className="font-semibold text-lg text-gray-900">Date &amp; Time</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Date &amp; Time</h2>
+            {saleDates.length < 7 && (
+              <button
+                type="button"
+                onClick={addDateRow}
+                className="text-sm text-treasure-600 hover:text-treasure-700 font-medium flex items-center gap-1"
+              >
+                <Plus size={14} />
+                Add day
+              </button>
+            )}
+          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Sale Date
-              </label>
-              <input
-                type="date"
-                className="input-field"
-                value={formData.sale_date ?? ''}
-                onChange={(e) => updateField('sale_date', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Start Time
-              </label>
-              <input
-                type="time"
-                className="input-field"
-                value={formData.start_time ?? ''}
-                onChange={(e) => updateField('start_time', e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                End Time
-              </label>
-              <input
-                type="time"
-                className="input-field"
-                value={formData.end_time ?? ''}
-                onChange={(e) => updateField('end_time', e.target.value)}
-              />
-            </div>
+          <div className="space-y-3">
+            {saleDates.map((row, i) => (
+              <div key={i} className="flex items-end gap-3">
+                <div className="flex-1">
+                  <input
+                    type="date"
+                    value={row.date}
+                    onChange={(e) => updateDateRow(i, 'date', e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                <div className="w-28">
+                  <input
+                    type="time"
+                    value={row.start_time}
+                    onChange={(e) => updateDateRow(i, 'start_time', e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                <div className="w-28">
+                  <input
+                    type="time"
+                    value={row.end_time}
+                    onChange={(e) => updateDateRow(i, 'end_time', e.target.value)}
+                    className="input-field"
+                  />
+                </div>
+                {saleDates.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeDateRow(i)}
+                    className="p-2.5 text-gray-400 hover:text-red-500"
+                    aria-label="Remove date"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+              </div>
+            ))}
           </div>
         </section>
 
         {/* Contact Info */}
         <section className="space-y-4">
-          <h2 className="font-semibold text-lg text-gray-900">Your Info</h2>
+          <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">Your Info</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Your Name
               </label>
               <input
@@ -358,7 +450,7 @@ export default function ManageSalePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email
               </label>
               <input
@@ -372,7 +464,7 @@ export default function ManageSalePage() {
         </section>
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200">
+        <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={handleSave}
             disabled={saving}
@@ -405,12 +497,12 @@ export default function ManageSalePage() {
       {/* Delete confirmation dialog */}
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl p-6 max-w-md w-full space-y-4 shadow-xl">
+          <div className="bg-white dark:bg-gray-900 rounded-xl p-6 max-w-md w-full space-y-4 shadow-xl">
             <div className="flex items-center gap-3 text-red-600">
               <AlertTriangle size={24} />
               <h3 className="font-display text-xl font-bold">Delete Listing?</h3>
             </div>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               This action cannot be undone. Your listing for &ldquo;{sale.title}&rdquo; will
               be permanently removed.
             </p>

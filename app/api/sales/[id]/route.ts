@@ -1,16 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServer } from '@/lib/supabase-server';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
 export async function GET(req: NextRequest, context: RouteContext) {
+  const supabase = await createSupabaseServer();
   const { id } = await context.params;
 
   const { data, error } = await supabase
     .from('garage_sales')
-    .select('*, photos:sale_photos(*)')
+    .select('*, photos:sale_photos(*), sale_dates(*)')
     .eq('id', id)
     .eq('is_active', true)
     .single();
@@ -23,18 +24,18 @@ export async function GET(req: NextRequest, context: RouteContext) {
 }
 
 export async function PUT(req: NextRequest, context: RouteContext) {
+  const supabase = await createSupabaseServer();
   const { id } = await context.params;
   const body = await req.json();
   const { manage_token, ...updates } = body;
 
-  if (!manage_token) {
-    return NextResponse.json({ error: 'Manage token is required' }, { status: 401 });
-  }
+  // Check authenticated user
+  const { data: { user } } = await supabase.auth.getUser();
 
-  // Verify the manage token
+  // Verify ownership via manage_token OR authenticated user
   const { data: existing, error: fetchError } = await supabase
     .from('garage_sales')
-    .select('manage_token')
+    .select('manage_token, user_id')
     .eq('id', id)
     .eq('is_active', true)
     .single();
@@ -43,8 +44,11 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: 'Sale not found' }, { status: 404 });
   }
 
-  if (existing.manage_token !== manage_token) {
-    return NextResponse.json({ error: 'Invalid manage token' }, { status: 403 });
+  const isOwnerByAuth = user && existing.user_id === user.id;
+  const isOwnerByToken = manage_token && existing.manage_token === manage_token;
+
+  if (!isOwnerByAuth && !isOwnerByToken) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 
   // Only allow updating specific fields
@@ -85,18 +89,24 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 }
 
 export async function DELETE(req: NextRequest, context: RouteContext) {
+  const supabase = await createSupabaseServer();
   const { id } = await context.params;
-  const body = await req.json();
-  const { manage_token } = body;
 
-  if (!manage_token) {
-    return NextResponse.json({ error: 'Manage token is required' }, { status: 401 });
+  let manage_token: string | null = null;
+  try {
+    const body = await req.json();
+    manage_token = body.manage_token ?? null;
+  } catch {
+    // No body is fine for authenticated users
   }
 
-  // Verify the manage token
+  // Check authenticated user
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Verify ownership
   const { data: existing, error: fetchError } = await supabase
     .from('garage_sales')
-    .select('manage_token')
+    .select('manage_token, user_id')
     .eq('id', id)
     .eq('is_active', true)
     .single();
@@ -105,8 +115,11 @@ export async function DELETE(req: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: 'Sale not found' }, { status: 404 });
   }
 
-  if (existing.manage_token !== manage_token) {
-    return NextResponse.json({ error: 'Invalid manage token' }, { status: 403 });
+  const isOwnerByAuth = user && existing.user_id === user.id;
+  const isOwnerByToken = manage_token && existing.manage_token === manage_token;
+
+  if (!isOwnerByAuth && !isOwnerByToken) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
   }
 
   // Soft delete by setting is_active to false

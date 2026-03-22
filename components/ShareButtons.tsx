@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Link2, Share2 } from 'lucide-react';
+import { shareContent, isNativeApp, hapticTap } from '@/lib/native';
 
 interface ShareButtonsProps {
   title: string;
@@ -11,7 +12,12 @@ interface ShareButtonsProps {
 export default function ShareButtons({ title, url }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
-  const getUrl = () => url ?? window.location.href;
+  const getUrl = () => url ?? (typeof window !== 'undefined' ? window.location.href : '');
+
+  const handleNativeShare = async () => {
+    await hapticTap();
+    await shareContent({ title, url: getUrl() });
+  };
 
   const copyToClipboard = async () => {
     try {
@@ -19,7 +25,6 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for older browsers
       const textarea = document.createElement('textarea');
       textarea.value = getUrl();
       document.body.appendChild(textarea);
@@ -41,29 +46,31 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
     window.open(shareUrl, '_blank', 'noopener,noreferrer,width=600,height=400');
   };
 
+  const btnClass = 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-treasure-400 hover:text-treasure-700 dark:hover:text-treasure-400 transition-all';
+
+  // On native apps, show a single native share button
+  if (isNativeApp()) {
+    return (
+      <div className="flex items-center gap-2 mt-3">
+        <button type="button" onClick={handleNativeShare} className={btnClass}>
+          <Share2 size={14} />
+          Share
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex items-center gap-2 mt-3">
       <Share2 size={16} className="text-gray-400" />
-      <button
-        type="button"
-        onClick={copyToClipboard}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-gray-300 text-gray-600 hover:border-treasure-400 hover:text-treasure-700 transition-all"
-      >
+      <button type="button" onClick={copyToClipboard} className={btnClass}>
         <Link2 size={14} />
         {copied ? 'Copied!' : 'Copy Link'}
       </button>
-      <button
-        type="button"
-        onClick={shareOnFacebook}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-gray-300 text-gray-600 hover:border-treasure-400 hover:text-treasure-700 transition-all"
-      >
+      <button type="button" onClick={shareOnFacebook} className={btnClass}>
         Facebook
       </button>
-      <button
-        type="button"
-        onClick={shareOnTwitter}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium border border-gray-300 text-gray-600 hover:border-treasure-400 hover:text-treasure-700 transition-all"
-      >
+      <button type="button" onClick={shareOnTwitter} className={btnClass}>
         X
       </button>
     </div>

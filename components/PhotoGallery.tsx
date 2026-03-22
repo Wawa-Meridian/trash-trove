@@ -20,7 +20,7 @@ export default function PhotoGallery({
 
   if (photos.length === 0) {
     return (
-      <div className="aspect-[4/3] bg-gray-100 rounded-xl flex items-center justify-center text-gray-300">
+      <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-xl flex items-center justify-center text-gray-300 dark:text-gray-600">
         <div className="text-center">
           <ImageIcon size={64} className="mx-auto mb-2" />
           <p>No photos</p>
@@ -32,7 +32,7 @@ export default function PhotoGallery({
   return (
     <div>
       {/* Main image */}
-      <div className="aspect-[4/3] bg-gray-100 rounded-xl overflow-hidden relative group">
+      <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden relative group">
         <img
           src={photos[current].url}
           alt={photos[current].caption ?? `${title} photo ${current + 1}`}

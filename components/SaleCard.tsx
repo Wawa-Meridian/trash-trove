@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import { MapPin, Clock, Calendar, ImageIcon } from 'lucide-react';
-import { format, parseISO } from 'date-fns';
 import type { GarageSale } from '@/lib/types';
+import { formatSaleDateShort } from '@/lib/date-utils';
 import FavoriteButton from '@/components/FavoriteButton';
 
 export default function SaleCard({ sale }: { sale: GarageSale }) {
-  const saleDate = parseISO(sale.sale_date);
   const coverPhoto = sale.photos?.[0]?.url;
+  const dateDisplay = formatSaleDateShort(sale.sale_dates, sale.sale_date);
+  const isMultiDay = (sale.sale_dates?.length ?? 0) > 1;
 
   return (
     <Link href={`/sale/${sale.id}`} className="card group">
@@ -32,15 +33,20 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
             {sale.photos.length} photos
           </span>
         )}
+        {isMultiDay && (
+          <span className="absolute top-2 left-2 bg-forest-600 text-white text-xs px-2 py-1 rounded-full font-medium">
+            Multi-day
+          </span>
+        )}
       </div>
 
       {/* Details */}
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 group-hover:text-treasure-700 transition-colors line-clamp-1">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-treasure-700 transition-colors line-clamp-1">
           {sale.title}
         </h3>
 
-        <div className="mt-2 space-y-1.5 text-sm text-gray-500">
+        <div className="mt-2 space-y-1.5 text-sm text-gray-500 dark:text-gray-400">
           <div className="flex items-center gap-1.5">
             <MapPin size={14} className="text-treasure-500 shrink-0" />
             <span className="truncate">
@@ -49,7 +55,7 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
           </div>
           <div className="flex items-center gap-1.5">
             <Calendar size={14} className="text-treasure-500 shrink-0" />
-            <span>{format(saleDate, 'EEEE, MMMM d')}</span>
+            <span>{dateDisplay}</span>
           </div>
           <div className="flex items-center gap-1.5">
             <Clock size={14} className="text-treasure-500 shrink-0" />
@@ -69,6 +75,18 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
             ))}
             {sale.categories.length > 3 && (
               <span className="badge-category">+{sale.categories.length - 3}</span>
+            )}
+          </div>
+        )}
+
+        {/* Price indicator */}
+        {(sale.price_min != null || sale.price_max != null || sale.has_free_items) && (
+          <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+            {sale.price_min != null && sale.price_max != null && (
+              <span>${(sale.price_min / 100).toFixed(0)} - ${(sale.price_max / 100).toFixed(0)}</span>
+            )}
+            {sale.has_free_items && (
+              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Free items!</span>
             )}
           </div>
         )}

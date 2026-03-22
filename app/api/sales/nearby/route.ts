@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServer } from '@/lib/supabase-server';
 
 export async function GET(req: NextRequest) {
+  const supabase = await createSupabaseServer();
   const { searchParams } = req.nextUrl;
   const latParam = searchParams.get('lat');
   const lngParam = searchParams.get('lng');
@@ -50,21 +51,39 @@ export async function GET(req: NextRequest) {
   const saleIds = (data ?? []).map((s: { id: string }) => s.id);
 
   let photosMap: Record<string, Array<{ id: string; url: string; display_order: number }>> = {};
+  let datesMap: Record<string, Array<{ id: string; sale_date: string; start_time: string; end_time: string }>> = {};
 
   if (saleIds.length > 0) {
-    const { data: photos } = await supabase
-      .from('sale_photos')
-      .select('*')
-      .in('sale_id', saleIds)
-      .order('display_order', { ascending: true });
+    const [{ data: photos }, { data: saleDates }] = await Promise.all([
+      supabase
+        .from('sale_photos')
+        .select('*')
+        .in('sale_id', saleIds)
+        .order('display_order', { ascending: true }),
+      supabase
+        .from('sale_dates')
+        .select('*')
+        .in('sale_id', saleIds)
+        .order('sale_date', { ascending: true }),
+    ]);
 
     if (photos) {
       photosMap = photos.reduce(
-        (acc: Record<string, Array<{ id: string; url: string; display_order: number }>>, photo: { sale_id: string; id: string; url: string; display_order: number }) => {
+        (acc: typeof photosMap, photo: { sale_id: string; id: string; url: string; display_order: number }) => {
           const existing = acc[photo.sale_id] ?? [];
           return { ...acc, [photo.sale_id]: [...existing, photo] };
         },
-        {} as Record<string, Array<{ id: string; url: string; display_order: number }>>
+        {} as typeof photosMap
+      );
+    }
+
+    if (saleDates) {
+      datesMap = saleDates.reduce(
+        (acc: typeof datesMap, d: { sale_id: string; id: string; sale_date: string; start_time: string; end_time: string }) => {
+          const existing = acc[d.sale_id] ?? [];
+          return { ...acc, [d.sale_id]: [...existing, d] };
+        },
+        {} as typeof datesMap
       );
     }
   }
@@ -72,6 +91,7 @@ export async function GET(req: NextRequest) {
   const salesWithPhotos = (data ?? []).map((sale: { id: string; distance_miles: number }) => ({
     ...sale,
     photos: photosMap[sale.id] ?? [],
+    sale_dates: datesMap[sale.id] ?? [],
   }));
 
   return NextResponse.json({
