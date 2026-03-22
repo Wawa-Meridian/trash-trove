@@ -4,6 +4,25 @@ All notable changes to TrashTrove will be documented in this file.
 
 Format follows [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] - 2026-03-22
+
+### Added
+
+- Google Maps Geocoding API integration (replaces Nominatim for higher accuracy)
+- Server-side image compression via sharp (auto-convert to WebP, max 1200px, quality 80)
+- Contact messages persisted to `contact_messages` database table (replaces console logging)
+- Home page SEO metadata (title, description, OpenGraph, Twitter Card)
+
+### Fixed
+
+- RLS UPDATE/DELETE policies added to `garage_sales` table (geocoding and edit/delete were silently failing)
+- Geocoding now works on sale creation (was blocked by missing RLS policy)
+
+### Changed
+
+- Uploaded images now stored as optimized WebP instead of original format
+- Contact form messages saved to database for seller retrieval instead of logged to console
+
 ## [0.4.0] - 2026-03-22
 
 ### Added

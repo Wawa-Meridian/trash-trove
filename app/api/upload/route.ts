@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import sharp from 'sharp';
 import { supabase } from '@/lib/supabase';
 import { rateLimit } from '@/lib/rate-limit';
 
@@ -40,18 +41,22 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Generate unique filename
-  const ext = file.name.split('.').pop() ?? 'jpg';
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  // Generate unique filename with .webp extension
+  const filename = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.webp`;
   const path = `sales/${filename}`;
 
   const arrayBuffer = await file.arrayBuffer();
-  const buffer = new Uint8Array(arrayBuffer);
+
+  // Resize and compress to WebP using sharp
+  const compressed = await sharp(Buffer.from(arrayBuffer))
+    .resize({ width: 1200, withoutEnlargement: true })
+    .webp({ quality: 80 })
+    .toBuffer();
 
   const { error } = await supabase.storage
     .from('sale-photos')
-    .upload(path, buffer, {
-      contentType: file.type,
+    .upload(path, compressed, {
+      contentType: 'image/webp',
       cacheControl: '3600',
     });
 

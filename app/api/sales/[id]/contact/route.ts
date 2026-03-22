@@ -36,15 +36,26 @@ export async function POST(req: NextRequest, context: RouteContext) {
     return NextResponse.json({ error: 'Sale not found' }, { status: 404 });
   }
 
-  // Log the contact message (email sending can be added later)
-  console.log('Contact message received:', {
-    sale_id: sale.id,
-    sale_title: sale.title,
-    seller_email: sale.seller_email,
-    from_name: name,
-    from_email: email,
-    message,
-  });
+  // Store the contact message so the seller can view it
+  const { error: insertError } = await supabase
+    .from('contact_messages')
+    .insert({
+      sale_id: sale.id,
+      sender_name: name,
+      sender_email: email,
+      message,
+    });
 
-  return NextResponse.json({ success: true });
+  if (insertError) {
+    console.error('Failed to store contact message:', insertError);
+    return NextResponse.json(
+      { error: 'Failed to send message. Please try again later.' },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: 'Your message has been sent to the seller',
+  });
 }

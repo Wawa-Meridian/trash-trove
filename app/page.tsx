@@ -1,9 +1,32 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { MapPin, Plus, Calendar, Search } from 'lucide-react';
 import SaleCard from '@/components/SaleCard';
 import StateGrid from '@/components/StateGrid';
 import SearchBar from '@/components/SearchBar';
 import { supabase } from '@/lib/supabase';
+
+export const metadata: Metadata = {
+  title: 'TrashTrove — Find Weekend Garage Sales Near You',
+  description:
+    'Discover hidden gems at neighborhood garage sales. Browse thousands of listings by state and city, or list your own sale for free. Updated weekly.',
+  openGraph: {
+    title: 'TrashTrove — Find Weekend Garage Sales Near You',
+    description:
+      'Browse garage sales by location or list your own for free. Find furniture, electronics, vintage items, and more at neighborhood sales near you.',
+    type: 'website',
+    url: 'https://trashtrove.app',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'TrashTrove — Find Weekend Garage Sales Near You',
+    description:
+      'Browse garage sales by location or list your own for free.',
+  },
+  alternates: {
+    canonical: 'https://trashtrove.app',
+  },
+};
 
 async function getUpcomingSales() {
   const today = new Date().toISOString().split('T')[0];
