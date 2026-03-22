@@ -4,6 +4,15 @@ All notable changes to TrashTrove will be documented in this file.
 
 Format follows [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] - 2026-03-22
+
+### Added
+
+- Automated weekly listing wipe via pg_cron
+- Timezone-aware cleanup: listings delete at midnight Sunday→Monday per state timezone
+- Covers all 6 US timezone groups (Eastern, Central, Mountain, Pacific, Alaska, Hawaii)
+- DST handled automatically via PostgreSQL named timezones
+
 ## [0.1.0] - 2026-03-22
 
 ### Added
