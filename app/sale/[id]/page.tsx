@@ -1,10 +1,15 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronRight, MapPin, Clock, Calendar, Mail, User, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
+import { ChevronRight, MapPin, Clock, Calendar, User, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { supabase } from '@/lib/supabase';
 import { US_STATES } from '@/lib/types';
 import PhotoGallery from '@/components/PhotoGallery';
+import ShareButtons from '@/components/ShareButtons';
+import ContactForm from '@/components/ContactForm';
+import FavoriteButton from '@/components/FavoriteButton';
+import ReportButton from '@/components/ReportButton';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -18,6 +23,42 @@ async function getSale(id: string) {
     .eq('is_active', true)
     .single();
   return data;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const sale = await getSale(id);
+
+  if (!sale) return {};
+
+  const description = sale.description
+    ? sale.description.slice(0, 160)
+    : `Garage sale in ${sale.city}, ${sale.state}`;
+
+  const photos = sale.photos?.sort(
+    (a: any, b: any) => a.display_order - b.display_order
+  ) ?? [];
+
+  const metadata: Metadata = {
+    title: sale.title,
+    description,
+    openGraph: {
+      title: sale.title,
+      description,
+    },
+    twitter: {
+      card: photos.length > 0 ? 'summary_large_image' : 'summary',
+      title: sale.title,
+      description,
+    },
+  };
+
+  if (photos.length > 0) {
+    metadata.openGraph!.images = [{ url: photos[0].url }];
+    metadata.twitter!.images = [photos[0].url];
+  }
+
+  return metadata;
 }
 
 export default async function SaleDetailPage({ params }: Props) {
@@ -68,9 +109,16 @@ export default async function SaleDetailPage({ params }: Props) {
         {/* Right: Details */}
         <div className="lg:col-span-2 space-y-6">
           <div>
-            <h1 className="font-display text-2xl sm:text-3xl font-bold text-gray-900">
-              {sale.title}
-            </h1>
+            <div className="flex items-start justify-between gap-3">
+              <h1 className="font-display text-2xl sm:text-3xl font-bold text-gray-900">
+                {sale.title}
+              </h1>
+              <FavoriteButton
+                saleId={sale.id}
+                variant="default"
+                className="mt-1 p-2 rounded-full hover:bg-gray-100 transition-colors"
+              />
+            </div>
 
             {/* Categories */}
             {sale.categories?.length > 0 && (
@@ -82,6 +130,8 @@ export default async function SaleDetailPage({ params }: Props) {
                 ))}
               </div>
             )}
+
+            <ShareButtons title={sale.title} />
           </div>
 
           {/* Date & Time */}
@@ -127,18 +177,10 @@ export default async function SaleDetailPage({ params }: Props) {
                 </div>
               </div>
             </div>
-            {sale.seller_email && (
-              <div className="flex items-center gap-3">
-                <Mail size={20} className="text-treasure-600" />
-                <a
-                  href={`mailto:${sale.seller_email}`}
-                  className="text-treasure-600 hover:underline"
-                >
-                  {sale.seller_email}
-                </a>
-              </div>
-            )}
           </div>
+
+          {/* Contact Form */}
+          <ContactForm saleId={sale.id} sellerName={sale.seller_name} />
         </div>
       </div>
 
@@ -152,6 +194,11 @@ export default async function SaleDetailPage({ params }: Props) {
             {sale.description}
           </p>
         </div>
+      </div>
+
+      {/* Report */}
+      <div className="mt-8 pt-6 border-t border-gray-200 flex justify-end">
+        <ReportButton saleId={sale.id} />
       </div>
     </div>
   );

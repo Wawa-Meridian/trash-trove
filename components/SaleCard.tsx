@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { MapPin, Clock, Calendar, ImageIcon } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import type { GarageSale } from '@/lib/types';
+import FavoriteButton from '@/components/FavoriteButton';
 
 export default function SaleCard({ sale }: { sale: GarageSale }) {
   const saleDate = parseISO(sale.sale_date);
@@ -22,6 +23,10 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
             <ImageIcon size={48} />
           </div>
         )}
+        <FavoriteButton
+          saleId={sale.id}
+          className="absolute top-2 right-2 bg-black/40 hover:bg-black/60 rounded-full p-1.5"
+        />
         {sale.photos?.length > 1 && (
           <span className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-full">
             {sale.photos.length} photos

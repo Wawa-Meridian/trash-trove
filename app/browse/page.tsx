@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import StateGrid from '@/components/StateGrid';
 import { supabase } from '@/lib/supabase';
+
+export const metadata: Metadata = {
+  title: 'Browse Garage Sales by State',
+  description:
+    'Find garage sales in all 50 states. Browse upcoming yard sales, estate sales, and moving sales near you on TrashTrove.',
+};
 
 async function getStateCounts() {
   const today = new Date().toISOString().split('T')[0];

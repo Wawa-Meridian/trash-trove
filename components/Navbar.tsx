@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, MapPin, Plus } from 'lucide-react';
+import { Menu, X, MapPin, Plus, Heart } from 'lucide-react';
+import SearchBar from '@/components/SearchBar';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,14 @@ export default function Navbar() {
             >
               <MapPin size={18} />
               Browse Sales
+            </Link>
+            <SearchBar className="w-64" />
+            <Link
+              href="/favorites"
+              className="flex items-center gap-1.5 text-gray-600 hover:text-treasure-700 transition-colors"
+            >
+              <Heart size={18} />
+              Favorites
             </Link>
             <Link href="/create" className="btn-primary flex items-center gap-1.5">
               <Plus size={18} />
@@ -55,6 +64,14 @@ export default function Navbar() {
               Browse Sales
             </Link>
             <Link
+              href="/favorites"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"
+              onClick={() => setIsOpen(false)}
+            >
+              <Heart size={18} />
+              Favorites
+            </Link>
+            <Link
               href="/create"
               className="flex items-center gap-2 px-3 py-2 rounded-lg bg-treasure-600 text-white"
               onClick={() => setIsOpen(false)}
@@ -62,6 +79,7 @@ export default function Navbar() {
               <Plus size={18} />
               List Your Sale
             </Link>
+            <SearchBar className="px-3 pt-2" />
           </div>
         )}
       </div>

@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useDropzone } from 'react-dropzone';
-import { Upload, X, Loader2, CheckCircle } from 'lucide-react';
+import { Upload, X, Loader2, CheckCircle, Link as LinkIcon } from 'lucide-react';
 import { SALE_CATEGORIES, US_STATES } from '@/lib/types';
 
 const saleSchema = z.object({
@@ -32,6 +32,8 @@ export default function CreateSalePage() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [manageUrl, setManageUrl] = useState<string | null>(null);
+  const [createdId, setCreatedId] = useState<string | null>(null);
 
   const {
     register,
@@ -99,10 +101,19 @@ export default function CreateSalePage() {
         throw new Error(err.error ?? 'Failed to create sale');
       }
 
-      const { id } = await res.json();
-      router.push(`/sale/${id}`);
-    } catch (err: any) {
-      setError(err.message);
+      const { id, manage_token } = await res.json();
+
+      // Save manage token to localStorage
+      if (manage_token) {
+        localStorage.setItem(`trashtrove_manage_${id}`, manage_token);
+        setManageUrl(`${window.location.origin}/sale/${id}/manage?token=${manage_token}`);
+        setCreatedId(id);
+      } else {
+        router.push(`/sale/${id}`);
+      }
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Failed to create sale';
+      setError(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -125,6 +136,40 @@ export default function CreateSalePage() {
       <p className="text-gray-500 mb-8">
         Share your sale details and let shoppers know what treasures you have.
       </p>
+
+      {manageUrl && createdId && (
+        <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8 space-y-4">
+          <div className="flex items-center gap-2 text-green-800 font-semibold text-lg">
+            <CheckCircle size={22} />
+            Your sale has been listed!
+          </div>
+          <p className="text-green-700 text-sm">
+            Save this link to manage your listing. You can use it to edit or delete your sale later.
+            This is the only way to manage your listing, so keep it safe.
+          </p>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 bg-white border border-green-300 rounded-lg px-3 py-2 text-sm text-gray-700 truncate">
+              <LinkIcon size={14} className="inline mr-2 text-green-600" />
+              {manageUrl}
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(manageUrl);
+              }}
+              className="btn-secondary text-sm whitespace-nowrap"
+            >
+              Copy Link
+            </button>
+          </div>
+          <a
+            href={`/sale/${createdId}`}
+            className="btn-primary inline-flex items-center gap-2 text-sm"
+          >
+            View Your Listing
+          </a>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* Basic Info */}

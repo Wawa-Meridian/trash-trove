@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
@@ -7,6 +8,19 @@ import { US_STATES } from '@/lib/types';
 
 interface Props {
   params: Promise<{ state: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { state } = await params;
+  const stateCode = state.toUpperCase();
+  const stateName = US_STATES[stateCode];
+
+  if (!stateName) return {};
+
+  return {
+    title: `Garage Sales in ${stateName}`,
+    description: `Find upcoming garage sales in ${stateName}. Browse yard sales, estate sales, and moving sales listed on TrashTrove.`,
+  };
 }
 
 async function getCitiesInState(state: string) {

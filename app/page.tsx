@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { MapPin, Plus, Calendar, Search } from 'lucide-react';
 import SaleCard from '@/components/SaleCard';
 import StateGrid from '@/components/StateGrid';
+import SearchBar from '@/components/SearchBar';
 import { supabase } from '@/lib/supabase';
 
 async function getUpcomingSales() {
@@ -45,6 +46,10 @@ export default async function HomePage() {
             Discover hidden gems at neighborhood garage sales. Browse by
             location or list your own sale for free.
           </p>
+
+          <div className="mt-6 max-w-xl mx-auto">
+            <SearchBar />
+          </div>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
             <Link

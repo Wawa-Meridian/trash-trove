@@ -1,7 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function POST(req: NextRequest) {
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown';
+  const { success, remaining } = rateLimit(`upload:${ip}`, 30, 60 * 60 * 1000);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many uploads. Please try again later.' },
+      { status: 429, headers: { 'Retry-After': '3600' } }
+    );
+  }
+
   const formData = await req.formData();
   const file = formData.get('file') as File | null;
 
@@ -49,5 +63,15 @@ export async function POST(req: NextRequest) {
     .from('sale-photos')
     .getPublicUrl(path);
 
-  return NextResponse.json({ url: urlData.publicUrl });
+  // Also generate an optimized thumbnail URL for listing cards
+  const { data: thumbData } = supabase.storage
+    .from('sale-photos')
+    .getPublicUrl(path, {
+      transform: { width: 600, height: 450, resize: 'cover', quality: 75 },
+    });
+
+  return NextResponse.json({
+    url: urlData.publicUrl,
+    thumbnail: thumbData.publicUrl,
+  });
 }

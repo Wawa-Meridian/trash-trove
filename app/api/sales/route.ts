@@ -1,13 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { rateLimit } from '@/lib/rate-limit';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl;
+  const ids = searchParams.getAll('ids');
   const state = searchParams.get('state');
   const city = searchParams.get('city');
   const search = searchParams.get('q');
   const limit = Math.min(parseInt(searchParams.get('limit') ?? '20'), 50);
   const offset = parseInt(searchParams.get('offset') ?? '0');
+
+  // Batch fetch by IDs (used by favorites page)
+  if (ids.length > 0) {
+    const safeIds = ids.slice(0, 50);
+    const { data, error } = await supabase
+      .from('garage_sales')
+      .select('*, photos:sale_photos(*)')
+      .in('id', safeIds)
+      .eq('is_active', true);
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({ sales: data, total: data?.length ?? 0 });
+  }
 
   const today = new Date().toISOString().split('T')[0];
 
@@ -33,6 +51,19 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  const ip =
+    req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    req.headers.get('x-real-ip') ??
+    'unknown';
+  const { success, remaining } = rateLimit(`sales:${ip}`, 5, 60 * 60 * 1000);
+
+  if (!success) {
+    return NextResponse.json(
+      { error: 'Too many sales created. Please try again later.' },
+      { status: 429, headers: { 'Retry-After': '3600' } }
+    );
+  }
+
   const body = await req.json();
   const {
     title,
@@ -55,6 +86,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
+  // Generate a manage token for anonymous edit/delete
+  const manage_token = crypto.randomUUID();
+
   // Insert the sale
   const { data: sale, error: saleError } = await supabase
     .from('garage_sales')
@@ -71,6 +105,7 @@ export async function POST(req: NextRequest) {
       end_time: end_time ?? '14:00',
       seller_name: seller_name?.trim() ?? 'Anonymous',
       seller_email: seller_email?.trim() ?? '',
+      manage_token,
     })
     .select()
     .single();
@@ -96,5 +131,5 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  return NextResponse.json({ id: sale.id }, { status: 201 });
+  return NextResponse.json({ id: sale.id, manage_token }, { status: 201 });
 }

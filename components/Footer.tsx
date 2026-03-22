@@ -27,6 +27,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/favorites" className="hover:text-white transition-colors">
+                  Favorites
+                </Link>
+              </li>
+              <li>
                 <Link href="/create" className="hover:text-white transition-colors">
                   List Your Sale
                 </Link>
