@@ -7,7 +7,8 @@ enum APIConfig {
     static let baseURL = "https://trashtrove.app"
     static let apiBaseURL = "\(baseURL)/api"
     // Supabase anon key - safe to embed in client apps (RLS enforces security)
-    static let supabaseAnonKey = "REPLACE_WITH_SUPABASE_ANON_KEY"
+    static let supabaseURL = "https://ajpvkjqbrabdoegfcnan.supabase.co"
+    static let supabaseAnonKey = "sb_publishable_GME4_ZgI_RNHj6l3fioOBA_IH1zsP00"
 }
 
 // MARK: - Error Types
