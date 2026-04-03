@@ -7,7 +7,7 @@ struct ShareSheetView: View {
         ShareLink(
             item: shareURL,
             subject: Text(sale.title),
-            message: Text(shareMessage)
+            message: Text(verbatim: shareMessage)
         ) {
             Label("Share", systemImage: "square.and.arrow.up")
         }
@@ -19,8 +19,8 @@ struct ShareSheetView: View {
         URL(string: "https://trashtrove.app/sale/\(sale.id.uuidString)")!
     }
 
-    private var shareMessage: Text {
-        Text("Check out this garage sale: \(sale.title) in \(sale.city), \(sale.state) on \(sale.formattedDate)")
+    private var shareMessage: String {
+        "Check out this garage sale: \(sale.title) in \(sale.city), \(sale.state) on \(sale.formattedDate)"
     }
 }
 
