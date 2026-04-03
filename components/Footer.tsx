@@ -41,6 +41,16 @@ export default function Footer() {
                   List Your Sale
                 </Link>
               </li>
+              <li>
+                <Link href="/privacy" className="hover:text-white transition-colors">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-white transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
             </ul>
           </div>
 

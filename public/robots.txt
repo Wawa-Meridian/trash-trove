@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /sale/*/manage
+
+Sitemap: https://trashtrove.app/sitemap.xml
