@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import SwiftUI
 import CoreLocation
 
@@ -32,13 +33,15 @@ final class NearbyViewModel: ObservableObject {
     @Published var radius: Int = 25
     @Published var locationState: LocationState = .loading
 
-    let locationService: LocationService
+    var locationService: LocationService?
 
-    nonisolated init() {
-        self.locationService = LocationService()
+    func setup(locationService: LocationService) {
+        self.locationService = locationService
+    }
     }
 
     func checkLocationAndLoad() {
+        guard let locationService else { return }
         let status = locationService.authorizationStatus
 
         switch status {
@@ -59,7 +62,7 @@ final class NearbyViewModel: ObservableObject {
     }
 
     func onLocationUpdate() {
-        if let location = locationService.userLocation {
+        if let location = locationService?.userLocation {
             locationState = .ready(location.coordinate)
             Task {
                 await loadNearbySales()

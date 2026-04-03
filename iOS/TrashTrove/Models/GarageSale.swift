@@ -1,6 +1,11 @@
 import Foundation
 
-struct GarageSale: Codable, Identifiable, Equatable {
+struct GarageSale: Codable, Identifiable, Equatable, Hashable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
     let id: UUID
     let title: String
     let description: String

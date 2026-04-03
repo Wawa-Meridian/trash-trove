@@ -3,6 +3,7 @@ import MapKit
 
 struct NearbyView: View {
     @StateObject private var viewModel = NearbyViewModel()
+    @EnvironmentObject var locationService: LocationService
 
     var body: some View {
         NavigationStack {
@@ -20,6 +21,8 @@ struct NearbyView: View {
             .navigationBarTitleDisplayMode(.large)
             .onAppear {
                 AnalyticsService.shared.trackScreen("Nearby")
+                viewModel.setup(locationService: locationService)
+                viewModel.checkLocationAndLoad()
             }
         }
     }
