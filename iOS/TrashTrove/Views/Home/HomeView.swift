@@ -224,7 +224,7 @@ struct HomeView: View {
                 .padding(.horizontal, 24)
                 .accessibilityAddTraits(.isHeader)
 
-            StateGridView(stateCounts: viewModel.stateCounts)
+            StateGridView(saleCounts: viewModel.stateCounts)
                 .padding(.horizontal, 24)
         }
         .padding(.vertical, 24)
