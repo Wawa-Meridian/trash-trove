@@ -1,7 +1,6 @@
 import Foundation
 import SwiftUI
 import CoreLocation
-import Combine
 
 // MARK: - Location State
 
@@ -27,66 +26,46 @@ enum LocationState: Equatable {
 @MainActor
 final class NearbyViewModel: ObservableObject {
 
-    // MARK: - Published Properties
-
     @Published var sales: [GarageSale] = []
     @Published var isLoading = false
     @Published var error: String?
     @Published var radius: Int = 25
     @Published var locationState: LocationState = .loading
 
-    // MARK: - Dependencies
-
     let locationService: LocationService
-    private var cancellables = Set<AnyCancellable>()
 
-    // MARK: - Init
-
-    @MainActor
-    init(locationService: LocationService = LocationService()) {
-        self.locationService = locationService
-        observeLocation()
+    nonisolated init() {
+        self.locationService = LocationService()
     }
 
-    // MARK: - Location Observation
+    func checkLocationAndLoad() {
+        let status = locationService.authorizationStatus
 
-    private func observeLocation() {
-        // React to authorization changes
-        locationService.$authorizationStatus
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] status in
-                guard let self else { return }
-                switch status {
-                case .denied, .restricted:
-                    self.locationState = .denied
-                case .notDetermined:
-                    self.locationState = .loading
-                    self.locationService.requestPermission()
-                case .authorizedWhenInUse, .authorizedAlways:
-                    if let location = self.locationService.userLocation {
-                        self.locationState = .ready(location.coordinate)
-                    }
-                @unknown default:
-                    self.locationState = .loading
-                }
+        switch status {
+        case .denied, .restricted:
+            locationState = .denied
+        case .notDetermined:
+            locationState = .loading
+            locationService.requestPermission()
+        case .authorizedWhenInUse, .authorizedAlways:
+            if let location = locationService.userLocation {
+                locationState = .ready(location.coordinate)
+            } else {
+                locationState = .loading
             }
-            .store(in: &cancellables)
-
-        // React to location updates
-        locationService.$userLocation
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] location in
-                guard let self else { return }
-                self.locationState = .ready(location.coordinate)
-                Task {
-                    await self.loadNearbySales()
-                }
-            }
-            .store(in: &cancellables)
+        @unknown default:
+            locationState = .loading
+        }
     }
 
-    // MARK: - Data Loading
+    func onLocationUpdate() {
+        if let location = locationService.userLocation {
+            locationState = .ready(location.coordinate)
+            Task {
+                await loadNearbySales()
+            }
+        }
+    }
 
     func loadNearbySales() async {
         guard case .ready(let coordinate) = locationState else { return }
@@ -114,8 +93,6 @@ final class NearbyViewModel: ObservableObject {
         isLoading = false
     }
 
-    // MARK: - Radius Update
-
     func updateRadius(_ newRadius: Int) {
         radius = newRadius
         Task {
@@ -123,7 +100,6 @@ final class NearbyViewModel: ObservableObject {
         }
     }
 
-    /// Returns the next larger radius option for the "expand" prompt, or nil if already at max.
     var nextLargerRadius: Int? {
         let options = [10, 25, 50, 100]
         guard let currentIndex = options.firstIndex(of: radius),
