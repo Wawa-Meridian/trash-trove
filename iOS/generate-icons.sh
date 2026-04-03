@@ -52,13 +52,23 @@ SVGEOF
 echo "SVG icon created: $SVG_FILE"
 
 # Generate PNG sizes if ImageMagick is available
-if command -v convert &> /dev/null; then
-  SIZES=(16 32 64 128 256 512 1024)
-  for size in "${SIZES[@]}"; do
-    convert "$SVG_FILE" -resize "${size}x${size}" "$ICON_DIR/app-icon-${size == 1024 ? '1024' : "mac-${size}"}.png"
+if command -v magick &> /dev/null || command -v convert &> /dev/null; then
+  CONVERT_CMD="convert"
+  if command -v magick &> /dev/null; then
+    CONVERT_CMD="magick"
+  fi
+
+  # Generate the 1024x1024 icon (used by iOS and Mac)
+  $CONVERT_CMD "$SVG_FILE" -resize "1024x1024" "$ICON_DIR/app-icon-1024.png"
+  echo "  Created app-icon-1024.png (1024x1024)"
+
+  # Generate Mac-specific sizes
+  for size in 16 32 64 128 256 512; do
+    $CONVERT_CMD "$SVG_FILE" -resize "${size}x${size}" "$ICON_DIR/app-icon-mac-${size}.png"
+    echo "  Created app-icon-mac-${size}.png (${size}x${size})"
   done
-  # iOS requires single 1024x1024
-  convert "$SVG_FILE" -resize "1024x1024" "$ICON_DIR/app-icon-1024.png"
+
+  echo ""
   echo "PNG icons generated in $ICON_DIR"
 else
   echo ""
