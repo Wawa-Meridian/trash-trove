@@ -22,49 +22,6 @@ enum LocationState: Equatable {
     }
 }
 
-// MARK: - Location Service
-
-final class LocationService: NSObject, ObservableObject, CLLocationManagerDelegate {
-    static let shared = LocationService()
-
-    @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
-    @Published var lastLocation: CLLocation?
-
-    private let manager = CLLocationManager()
-
-    override init() {
-        super.init()
-        manager.delegate = self
-        manager.desiredAccuracy = kCLLocationAccuracyHundredMeters
-        authorizationStatus = manager.authorizationStatus
-    }
-
-    func requestPermission() {
-        manager.requestWhenInUseAuthorization()
-    }
-
-    func requestLocation() {
-        manager.requestLocation()
-    }
-
-    // MARK: - CLLocationManagerDelegate
-
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        authorizationStatus = manager.authorizationStatus
-        if manager.authorizationStatus == .authorizedWhenInUse || manager.authorizationStatus == .authorizedAlways {
-            manager.requestLocation()
-        }
-    }
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        lastLocation = locations.last
-    }
-
-    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        // Location errors are non-fatal; the view model handles the absence of location
-    }
-}
-
 // MARK: - Nearby View Model
 
 @MainActor
@@ -85,7 +42,7 @@ final class NearbyViewModel: ObservableObject {
 
     // MARK: - Init
 
-    init(locationService: LocationService = .shared) {
+    init(locationService: LocationService = LocationService()) {
         self.locationService = locationService
         observeLocation()
     }
@@ -105,7 +62,7 @@ final class NearbyViewModel: ObservableObject {
                     self.locationState = .loading
                     self.locationService.requestPermission()
                 case .authorizedWhenInUse, .authorizedAlways:
-                    if let location = self.locationService.lastLocation {
+                    if let location = self.locationService.userLocation {
                         self.locationState = .ready(location.coordinate)
                     }
                 @unknown default:
@@ -115,7 +72,7 @@ final class NearbyViewModel: ObservableObject {
             .store(in: &cancellables)
 
         // React to location updates
-        locationService.$lastLocation
+        locationService.$userLocation
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] location in
