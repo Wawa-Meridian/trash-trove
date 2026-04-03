@@ -8,28 +8,28 @@ final class SecurityServiceTests: XCTestCase {
 
     func testSanitizeStripsHTMLTags() {
         let input = "<script>alert('xss')</script>Hello World"
-        let result = security.sanitize(input)
+        let result = security.stripHTML(input)
         XCTAssertFalse(result.contains("<script>"))
         XCTAssertFalse(result.contains("</script>"))
         XCTAssertTrue(result.contains("Hello World"))
     }
 
-    func testSanitizeTrimsWhitespace() {
+    func testSanitizeStringTrimsWhitespace() {
         let input = "  Hello World  "
-        let result = security.sanitize(input)
+        let result = security.sanitizeString(input, maxLength: 100)
         XCTAssertEqual(result, "Hello World")
     }
 
-    func testSanitizeLimitsLength() {
+    func testSanitizeStringLimitsLength() {
         let longString = String(repeating: "a", count: 2000)
-        let result = security.sanitize(longString, maxLength: 500)
+        let result = security.sanitizeString(longString, maxLength: 500)
         XCTAssertEqual(result.count, 500)
     }
 
-    func testSanitizeDefaultMaxLength() {
-        let longString = String(repeating: "b", count: 5000)
-        let result = security.sanitize(longString)
-        XCTAssertLessThanOrEqual(result.count, 1000)
+    func testSanitizeStringStripsHTMLAndTrims() {
+        let input = "  <b>Bold</b> text  "
+        let result = security.sanitizeString(input, maxLength: 100)
+        XCTAssertEqual(result, "Bold text")
     }
 
     // MARK: - Email Validation Tests
@@ -63,20 +63,45 @@ final class SecurityServiceTests: XCTestCase {
         XCTAssertFalse(security.isValidZIP("12345-"))
     }
 
+    // MARK: - State Validation Tests
+
+    func testValidStateCodes() {
+        XCTAssertTrue(security.isValidStateCode("CA"))
+        XCTAssertTrue(security.isValidStateCode("TX"))
+        XCTAssertTrue(security.isValidStateCode("ny")) // case insensitive
+    }
+
+    func testInvalidStateCodes() {
+        XCTAssertFalse(security.isValidStateCode(""))
+        XCTAssertFalse(security.isValidStateCode("XX"))
+        XCTAssertFalse(security.isValidStateCode("California"))
+    }
+
     // MARK: - Rate Limiting Tests
 
     func testRateLimitAllowsInitialRequests() {
-        let key = "test_rate_\(UUID().uuidString)"
-        XCTAssertTrue(security.checkRateLimit(key: key, limit: 5, windowSeconds: 60))
+        security.resetRateLimits()
+        let result = security.checkRateLimit(.createSale)
+        XCTAssertTrue(result.allowed)
+        XCTAssertGreaterThan(result.remaining, 0)
     }
 
     func testRateLimitBlocksExcessiveRequests() {
-        let key = "test_rate_block_\(UUID().uuidString)"
-        // Use up all the requests
+        security.resetRateLimits()
+        // Use up all createSale requests (limit is 5)
         for _ in 0..<5 {
-            _ = security.checkRateLimit(key: key, limit: 5, windowSeconds: 60)
+            _ = security.checkRateLimit(.createSale)
         }
-        // Should be blocked now
-        XCTAssertFalse(security.checkRateLimit(key: key, limit: 5, windowSeconds: 60))
+        let result = security.checkRateLimit(.createSale)
+        XCTAssertFalse(result.allowed)
+        XCTAssertEqual(result.remaining, 0)
+    }
+
+    // MARK: - Profanity Detection Tests
+
+    func testProfanityDetection() {
+        XCTAssertTrue(security.containsProfanityPlaceholder("test1234 listing"))
+        XCTAssertTrue(security.containsProfanityPlaceholder("asdfasdf"))
+        XCTAssertFalse(security.containsProfanityPlaceholder("Beautiful antique furniture"))
     }
 }

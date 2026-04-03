@@ -50,6 +50,7 @@ final class CreateSaleViewModel: ObservableObject {
     // MARK: - Private
 
     private let supabase = SupabaseService.shared
+    private let security = SecurityService.shared
 
     // MARK: - Init
 
@@ -230,17 +231,17 @@ final class CreateSaleViewModel: ObservableObject {
             let endTimeString = timeFormatter.string(from: endTime)
 
             let input = CreateSaleInput(
-                title: title.trimmed,
-                description: description.trimmed,
+                title: security.sanitizeString(title.trimmed, maxLength: 200),
+                description: security.sanitizeString(description.trimmed, maxLength: 2000),
                 categories: Array(selectedCategories),
-                address: address.trimmed,
-                city: city.trimmed,
+                address: security.sanitizeString(address.trimmed, maxLength: 200),
+                city: security.sanitizeString(city.trimmed, maxLength: 100),
                 state: state.uppercased(),
                 zip: zip.trimmed,
                 saleDate: saleDateString,
                 startTime: startTimeString,
                 endTime: endTimeString,
-                sellerName: sellerName.trimmed,
+                sellerName: security.sanitizeString(sellerName.trimmed, maxLength: 100),
                 sellerEmail: sellerEmail.trimmed.lowercased()
             )
 
@@ -263,8 +264,7 @@ final class CreateSaleViewModel: ObservableObject {
     // MARK: - Token Storage
 
     private func saveManageToken(saleId: UUID, token: String) {
-        var tokens = UserDefaults.standard.dictionary(forKey: "manageTokens") as? [String: String] ?? [:]
-        tokens[saleId.uuidString] = token
-        UserDefaults.standard.set(tokens, forKey: "manageTokens")
+        // Save to Keychain for secure storage
+        try? security.saveManageToken(token, forSaleId: saleId)
     }
 }

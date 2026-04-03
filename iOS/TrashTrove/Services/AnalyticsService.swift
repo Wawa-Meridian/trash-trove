@@ -78,6 +78,11 @@ final class AnalyticsService: @unchecked Sendable {
         track(.screenView, properties: ["screen": screenName])
     }
 
+    /// Alias for `trackScreenView` used by views.
+    func trackScreen(_ screenName: String) {
+        trackScreenView(screenName)
+    }
+
     /// Track viewing a specific sale.
     func trackSaleViewed(saleId: UUID, title: String) {
         track(.saleViewed, properties: [
@@ -162,6 +167,11 @@ final class AnalyticsService: @unchecked Sendable {
     }
 
     // MARK: - Export / Flush
+
+    /// Convenience method to flush events (discards them).
+    func flush() {
+        _ = exportAndFlush()
+    }
 
     /// Returns all stored events and clears the buffer.
     /// Intended for future integration with an analytics backend.

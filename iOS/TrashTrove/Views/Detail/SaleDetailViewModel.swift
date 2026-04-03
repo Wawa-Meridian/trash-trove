@@ -93,9 +93,10 @@ final class SaleDetailViewModel: ObservableObject {
         isSendingContact = true
         contactError = nil
 
-        let sanitizedName = contactName.trimmed
+        let security = SecurityService.shared
+        let sanitizedName = security.sanitizeString(contactName.trimmed, maxLength: 100)
         let sanitizedEmail = contactEmail.trimmed.lowercased()
-        let sanitizedMessage = contactMessage.trimmed
+        let sanitizedMessage = security.sanitizeString(contactMessage.trimmed, maxLength: 1000)
 
         do {
             try await supabase.sendContactMessage(
@@ -144,21 +145,12 @@ final class SaleDetailViewModel: ObservableObject {
     // MARK: - Favorite Toggle
 
     func toggleFavorite() {
-        isFavorited.toggle()
-        // Persist to UserDefaults (lightweight local favorites)
-        var favorites = UserDefaults.standard.stringArray(forKey: "favoriteSaleIds") ?? []
-        let idString = saleId.uuidString
-        if isFavorited {
-            if !favorites.contains(idString) { favorites.append(idString) }
-        } else {
-            favorites.removeAll { $0 == idString }
-        }
-        UserDefaults.standard.set(favorites, forKey: "favoriteSaleIds")
+        FavoritesService.shared.toggle(saleId: saleId)
+        isFavorited = FavoritesService.shared.isFavorite(saleId: saleId)
     }
 
     func loadFavoriteState() {
-        let favorites = UserDefaults.standard.stringArray(forKey: "favoriteSaleIds") ?? []
-        isFavorited = favorites.contains(saleId.uuidString)
+        isFavorited = FavoritesService.shared.isFavorite(saleId: saleId)
     }
 
     // MARK: - Share URL

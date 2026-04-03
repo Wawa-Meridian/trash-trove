@@ -139,12 +139,14 @@ struct SaleMapView: View {
 extension SaleMapView {
     /// Creates a map view for a single sale on the detail page.
     init(sale: GarageSale, showsUserLocation: Bool = true) {
+        let center: CLLocationCoordinate2D? = {
+            guard let lat = sale.latitude, let lng = sale.longitude else { return nil }
+            return CLLocationCoordinate2D(latitude: lat, longitude: lng)
+        }()
         self.init(
             sales: [sale],
             showsUserLocation: showsUserLocation,
-            initialCenter: sale.hasLocation
-                ? CLLocationCoordinate2D(latitude: sale.latitude!, longitude: sale.longitude!)
-                : nil,
+            initialCenter: center,
             initialSpan: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         )
     }

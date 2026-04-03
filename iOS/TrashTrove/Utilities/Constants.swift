@@ -131,6 +131,12 @@ extension Color {
     /// Primary gold accent color (treasure 500)
     static let treasureGold = treasure500
 
+    // Convenience aliases used by views
+    static let treasureGold50 = treasure50
+    static let treasureGold600 = treasure600
+    static let treasureGold800 = treasure800
+    static let treasureGold900 = treasure900
+
     // MARK: Forest (Green)
 
     static let forest50  = Color(hex: 0xF0FDF4)
@@ -147,4 +153,8 @@ extension Color {
 
     /// Primary green accent color (forest 600)
     static let forestGreen = forest600
+
+    // Convenience aliases used by views
+    static let forestGreen50 = forest50
+    static let forestGreen600 = forest600
 }

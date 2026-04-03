@@ -2,7 +2,13 @@ import SwiftUI
 
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
+    @State private var homePath = NavigationPath()
     @EnvironmentObject var favoritesService: FavoritesService
+    @Binding var deepLinkSaleId: UUID?
+
+    init(deepLinkSaleId: Binding<UUID?> = .constant(nil)) {
+        _deepLinkSaleId = deepLinkSaleId
+    }
 
     enum Tab: String {
         case home, browse, nearby, favorites, settings
@@ -10,8 +16,11 @@ struct MainTabView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
+            NavigationStack(path: $homePath) {
                 HomeView()
+                    .navigationDestination(for: UUID.self) { saleId in
+                        SaleDetailView(viewModel: SaleDetailViewModel(saleId: saleId))
+                    }
             }
             .tabItem {
                 Label("Home", systemImage: "house.fill")
@@ -55,6 +64,13 @@ struct MainTabView: View {
             .tag(Tab.settings)
         }
         .tint(Color.treasureGold600)
+        .onChange(of: deepLinkSaleId) { _, saleId in
+            if let saleId {
+                selectedTab = .home
+                homePath.append(saleId)
+                deepLinkSaleId = nil
+            }
+        }
     }
 }
 

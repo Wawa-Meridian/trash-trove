@@ -113,8 +113,8 @@ struct SettingsView: View {
             .alert("Clear Favorites", isPresented: $showClearFavoritesAlert) {
                 Button("Cancel", role: .cancel) { }
                 Button("Clear All", role: .destructive) {
-                    FavoritesService.shared.clearAll()
-                    AnalyticsService.shared.trackEvent("favoritesCleared")
+                    FavoritesService.shared.clear()
+                    AnalyticsService.shared.track(.screenView, properties: ["action": "favoritesCleared"])
                 }
             } message: {
                 Text("This will remove all saved favorites. This action cannot be undone.")
@@ -136,7 +136,7 @@ struct SettingsView: View {
                 Button("Cancel", role: .cancel) { }
                 Button("Clear History", role: .destructive) {
                     UserDefaults.standard.removeObject(forKey: "searchHistory")
-                    AnalyticsService.shared.trackEvent("searchHistoryCleared")
+                    AnalyticsService.shared.track(.screenView, properties: ["action": "searchHistoryCleared"])
                 }
             } message: {
                 Text("This will remove your recent search history. This action cannot be undone.")

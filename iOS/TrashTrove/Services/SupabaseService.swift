@@ -279,11 +279,11 @@ final class SupabaseService: @unchecked Sendable {
 
         // Build multipart body
         var bodyData = Data()
-        bodyData.append("--\(boundary)\r\n".data(using: .utf8)!)
-        bodyData.append("Content-Disposition: form-data; name=\"file\"; filename=\"photo.jpg\"\r\n".data(using: .utf8)!)
-        bodyData.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        bodyData.append(contentsOf: "--\(boundary)\r\n".utf8)
+        bodyData.append(contentsOf: "Content-Disposition: form-data; name=\"file\"; filename=\"photo.jpg\"\r\n".utf8)
+        bodyData.append(contentsOf: "Content-Type: image/jpeg\r\n\r\n".utf8)
         bodyData.append(imageData)
-        bodyData.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
+        bodyData.append(contentsOf: "\r\n--\(boundary)--\r\n".utf8)
         request.httpBody = bodyData
 
         let (data, response) = try await performRawRequest(request)
@@ -387,14 +387,25 @@ final class SupabaseService: @unchecked Sendable {
         }
     }
 
-    private func performRawRequest(_ request: URLRequest) async throws -> (Data, URLResponse) {
-        do {
-            return try await session.data(for: request)
-        } catch let error as URLError {
-            logger.error("Network error: \(error.localizedDescription)")
-            throw SupabaseError.networkError(error)
-        } catch {
-            throw SupabaseError.networkError(error)
+    private func performRawRequest(_ request: URLRequest, maxRetries: Int = 3) async throws -> (Data, URLResponse) {
+        var lastError: Error?
+        for attempt in 0...maxRetries {
+            do {
+                return try await session.data(for: request)
+            } catch let error as URLError where error.code == .timedOut || error.code == .networkConnectionLost || error.code == .notConnectedToInternet {
+                lastError = error
+                if attempt < maxRetries {
+                    let delay = UInt64(pow(2.0, Double(attempt))) * 1_000_000_000 // exponential backoff
+                    logger.warning("Request failed (attempt \(attempt + 1)/\(maxRetries + 1)), retrying in \(pow(2.0, Double(attempt)))s...")
+                    try await Task.sleep(nanoseconds: delay)
+                }
+            } catch let error as URLError {
+                logger.error("Network error: \(error.localizedDescription)")
+                throw SupabaseError.networkError(error)
+            } catch {
+                throw SupabaseError.networkError(error)
+            }
         }
+        throw SupabaseError.networkError(lastError ?? URLError(.unknown))
     }
 }

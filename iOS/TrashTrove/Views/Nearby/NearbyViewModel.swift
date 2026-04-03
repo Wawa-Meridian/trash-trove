@@ -144,10 +144,11 @@ final class NearbyViewModel: ObservableObject {
             )
             sales = fetchedSales
 
-            AnalyticsService.shared.trackEvent("nearbySearched", properties: [
-                "radius": String(radius),
-                "resultCount": String(fetchedSales.count),
-            ])
+            AnalyticsService.shared.trackNearbySearch(
+                lat: coordinate.latitude,
+                lng: coordinate.longitude,
+                radiusMiles: radius
+            )
         } catch {
             self.error = "Failed to load nearby sales. Please try again."
         }
