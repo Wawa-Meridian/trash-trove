@@ -59,11 +59,11 @@ final class SearchViewModel: ObservableObject {
         do {
             let response = try await SupabaseService.shared.searchSales(
                 query: query,
-                offset: 0,
-                limit: pageSize
+                limit: pageSize,
+                offset: 0
             )
             results = response.sales
-            totalResults = response.totalCount
+            totalResults = response.total
             hasSearched = true
         } catch {
             if !Task.isCancelled {
@@ -85,11 +85,11 @@ final class SearchViewModel: ObservableObject {
         do {
             let response = try await SupabaseService.shared.searchSales(
                 query: searchText,
-                offset: currentPage * pageSize,
-                limit: pageSize
+                limit: pageSize,
+                offset: currentPage * pageSize
             )
             results.append(contentsOf: response.sales)
-            totalResults = response.totalCount
+            totalResults = response.total
         } catch {
             currentPage -= 1
             if !Task.isCancelled {

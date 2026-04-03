@@ -129,7 +129,7 @@ extension Color {
     static let treasure950 = Color(hex: 0x3A1B0D)
 
     /// Primary gold accent color (treasure 500)
-    static let treasureGold = treasure500
+    static let treasureGoldPrimary = treasure500
 
     // Convenience aliases used by views
     static let treasureGold50 = treasure50
@@ -152,7 +152,7 @@ extension Color {
     static let forest950 = Color(hex: 0x052E16)
 
     /// Primary green accent color (forest 600)
-    static let forestGreen = forest600
+    static let forestGreenPrimary = forest600
 
     // Convenience aliases used by views
     static let forestGreen50 = forest50
