@@ -38,7 +38,6 @@ final class NearbyViewModel: ObservableObject {
     func setup(locationService: LocationService) {
         self.locationService = locationService
     }
-    }
 
     func checkLocationAndLoad() {
         guard let locationService else { return }

@@ -72,7 +72,7 @@ struct NearbyView: View {
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(.treasureGold600)
+                        .background(Color.treasureGold600)
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .accessibilityLabel("Open device settings to enable location")
@@ -80,10 +80,10 @@ struct NearbyView: View {
                 NavigationLink(destination: BrowseView()) {
                     Text("Browse Sales Instead")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(.treasureGold600.opacity(0.12))
+                        .background(Color.treasureGold600.opacity(0.12))
                         .clipShape(RoundedRectangle(cornerRadius: 12))
                 }
                 .accessibilityLabel("Browse all garage sales by state")
@@ -266,7 +266,7 @@ struct NearbyView: View {
                         .foregroundStyle(.white)
                         .padding(.horizontal, 24)
                         .padding(.vertical, 12)
-                        .background(.treasureGold600)
+                        .background(Color.treasureGold600)
                         .clipShape(Capsule())
                 }
                 .accessibilityLabel("Expand search to \(nextRadius) miles")
@@ -294,7 +294,7 @@ struct NearbyView: View {
                 }
             }
             .font(.subheadline.weight(.semibold))
-            .foregroundStyle(.treasureGold600)
+            .foregroundStyle(Color.treasureGold600)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 40)
