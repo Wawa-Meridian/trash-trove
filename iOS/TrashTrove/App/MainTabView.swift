@@ -19,7 +19,7 @@ struct MainTabView: View {
             NavigationStack(path: $homePath) {
                 HomeView()
                     .navigationDestination(for: UUID.self) { saleId in
-                        SaleDetailView(viewModel: SaleDetailViewModel(saleId: saleId))
+                        SaleDetailView(saleId: saleId)
                     }
             }
             .tabItem {
