@@ -157,7 +157,4 @@ extension Color {
     // Convenience aliases used by views
     static let forestGreen50 = forest50
     static let forestGreen600 = forest600
-
-    /// Generic alias matching the asset-catalog name so bare `.forestGreen` resolves
-    static let forestGreen = forest600
 }

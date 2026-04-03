@@ -44,7 +44,7 @@ struct StateGridView: View {
 
             if let count = saleCounts[code], count > 0 {
                 Text("\(count) sale\(count == 1 ? "" : "s")")
-                    .font(.system(size: 10, weight: .medium))
+                    .font(.system(size: 10, weight: .medium, design: .default))
                     .foregroundStyle(Color.forestGreen)
             }
         }
