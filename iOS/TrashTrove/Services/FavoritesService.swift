@@ -4,6 +4,8 @@ import os
 @MainActor
 final class FavoritesService: ObservableObject {
 
+    static let shared = FavoritesService()
+
     @Published private(set) var favorites: Set<UUID> = []
 
     private let storageKey = "trashtrove_favorites"

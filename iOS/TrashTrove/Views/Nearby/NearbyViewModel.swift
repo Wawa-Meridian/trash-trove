@@ -42,6 +42,7 @@ final class NearbyViewModel: ObservableObject {
 
     // MARK: - Init
 
+    @MainActor
     init(locationService: LocationService = LocationService()) {
         self.locationService = locationService
         observeLocation()

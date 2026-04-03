@@ -1,46 +1,16 @@
 import Foundation
 import SwiftUI
-import Combine
 
 // MARK: - Favorites View Model
 
 @MainActor
 final class FavoritesViewModel: ObservableObject {
 
-    // MARK: - Published Properties
-
     @Published var sales: [GarageSale] = []
     @Published var isLoading = false
 
-    // MARK: - Dependencies
-
-    private let favoritesService = FavoritesService.shared
-    private var cancellables = Set<AnyCancellable>()
-
-    // MARK: - Init
-
-    init() {
-        observeFavoritesChanges()
-    }
-
-    // MARK: - Observation
-
-    private func observeFavoritesChanges() {
-        favoritesService.objectWillChange
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                guard let self else { return }
-                Task {
-                    await self.loadFavorites()
-                }
-            }
-            .store(in: &cancellables)
-    }
-
-    // MARK: - Data Loading
-
     func loadFavorites() async {
-        let ids = favoritesService.favorites
+        let ids = FavoritesService.shared.favorites
         guard !ids.isEmpty else {
             sales = []
             return
@@ -67,6 +37,6 @@ final class FavoritesViewModel: ObservableObject {
     }
 
     var hasFavorites: Bool {
-        !favoritesService.favorites.isEmpty
+        !FavoritesService.shared.favorites.isEmpty
     }
 }
