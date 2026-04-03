@@ -42,7 +42,7 @@ struct SaleDetailView: View {
                         Text("Back")
                     }
                 }
-                .foregroundStyle(.treasure600)
+                .foregroundStyle(Color.treasure600)
                 .accessibilityLabel("Go back")
             }
         }
@@ -61,7 +61,7 @@ struct SaleDetailView: View {
         VStack(spacing: 16) {
             ProgressView()
                 .controlSize(.large)
-                .tint(.treasure600)
+                .tint(Color.treasure600)
             Text("Loading sale details...")
                 .foregroundStyle(.secondary)
         }
@@ -76,7 +76,7 @@ struct SaleDetailView: View {
         VStack(spacing: 16) {
             Image(systemName: "exclamationmark.triangle")
                 .font(.system(size: 40))
-                .foregroundStyle(.treasure600)
+                .foregroundStyle(Color.treasure600)
             Text("Something went wrong")
                 .font(.custom("Georgia", size: 20))
                 .fontWeight(.bold)
@@ -88,7 +88,7 @@ struct SaleDetailView: View {
                 Task { await viewModel.loadSale() }
             }
             .buttonStyle(.borderedProminent)
-            .tint(.treasure600)
+            .tint(Color.treasure600)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -154,7 +154,7 @@ struct SaleDetailView: View {
                     VStack(spacing: 8) {
                         Image(systemName: "photo.on.rectangle.angled")
                             .font(.system(size: 40))
-                            .foregroundStyle(.treasure300)
+                            .foregroundStyle(Color.treasure300)
                         Text("No photos available")
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
@@ -215,7 +215,7 @@ struct SaleDetailView: View {
             Color.treasure50
             Image(systemName: "photo")
                 .font(.system(size: 32))
-                .foregroundStyle(.treasure300)
+                .foregroundStyle(Color.treasure300)
         }
     }
 
@@ -256,7 +256,7 @@ struct SaleDetailView: View {
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(Color.treasure50)
-                            .foregroundStyle(.treasure700)
+                            .foregroundStyle(Color.treasure700)
                             .clipShape(Capsule())
                             .accessibilityLabel("Category: \(category)")
                     }
@@ -281,7 +281,7 @@ struct SaleDetailView: View {
                     }
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundStyle(.treasure600)
+                    .foregroundStyle(Color.treasure600)
                 }
                 .accessibilityLabel("Share this sale")
             }
@@ -295,7 +295,7 @@ struct SaleDetailView: View {
             HStack(spacing: 12) {
                 Image(systemName: "calendar")
                     .font(.title3)
-                    .foregroundStyle(.treasure600)
+                    .foregroundStyle(Color.treasure600)
                     .frame(width: 24)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(sale.formattedDate)
@@ -309,7 +309,7 @@ struct SaleDetailView: View {
             HStack(spacing: 12) {
                 Image(systemName: "clock")
                     .font(.title3)
-                    .foregroundStyle(.treasure600)
+                    .foregroundStyle(Color.treasure600)
                     .frame(width: 24)
                 Text(sale.formattedTimeRange)
                     .font(.subheadline)
@@ -331,7 +331,7 @@ struct SaleDetailView: View {
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "mappin.and.ellipse")
                     .font(.title3)
-                    .foregroundStyle(.treasure600)
+                    .foregroundStyle(Color.treasure600)
                     .frame(width: 24)
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Address")
@@ -358,7 +358,7 @@ struct SaleDetailView: View {
                     )
                 )) {
                     Marker(sale.title, coordinate: coordinate)
-                        .tint(.treasure600)
+                        .tint(Color.treasure600)
                 }
                 .frame(height: 180)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -383,7 +383,7 @@ struct SaleDetailView: View {
         HStack(spacing: 12) {
             Image(systemName: "person.circle.fill")
                 .font(.title)
-                .foregroundStyle(.treasure600)
+                .foregroundStyle(Color.treasure600)
             VStack(alignment: .leading, spacing: 2) {
                 Text("Seller")
                     .font(.caption)
@@ -419,7 +419,7 @@ struct SaleDetailView: View {
             } label: {
                 HStack {
                     Image(systemName: "envelope.fill")
-                        .foregroundStyle(.treasure600)
+                        .foregroundStyle(Color.treasure600)
                     Text("Contact \(sale.sellerName)")
                         .font(.subheadline)
                         .fontWeight(.semibold)
@@ -441,10 +441,10 @@ struct SaleDetailView: View {
                         // Success message
                         HStack(spacing: 8) {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundStyle(.forestGreen)
+                                .foregroundStyle(Color.forestGreen)
                             Text("Message sent! The seller will get back to you via email.")
                                 .font(.subheadline)
-                                .foregroundStyle(.forestGreen)
+                                .foregroundStyle(Color.forestGreen)
                         }
                         .padding(12)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -606,7 +606,7 @@ struct SaleDetailView: View {
                     VStack(spacing: 16) {
                         Image(systemName: "checkmark.circle.fill")
                             .font(.system(size: 48))
-                            .foregroundStyle(.forestGreen)
+                            .foregroundStyle(Color.forestGreen)
                         Text("Report Submitted")
                             .font(.custom("Georgia", size: 20))
                             .fontWeight(.bold)

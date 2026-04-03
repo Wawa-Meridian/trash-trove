@@ -22,7 +22,7 @@ struct HomeView: View {
                     Text("TrashTrove")
                         .font(.custom("Georgia", size: 20))
                         .fontWeight(.bold)
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                 }
             }
             .task {
@@ -41,7 +41,7 @@ struct HomeView: View {
     private var heroSection: some View {
         ZStack {
             LinearGradient(
-                colors: [.treasureGold50, .forestGreen50],
+                colors: [Color.treasureGold50, Color.forestGreen50],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -82,7 +82,7 @@ struct HomeView: View {
                             .foregroundStyle(.white)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 12)
-                            .background(.treasureGold600)
+                            .background(Color.treasureGold600)
                             .clipShape(Capsule())
                     }
                     .accessibilityLabel("Browse garage sales by state")
@@ -90,10 +90,10 @@ struct HomeView: View {
                     NavigationLink(destination: CreateSaleView()) {
                         Label("List Your Sale", systemImage: "plus.circle")
                             .font(.subheadline.weight(.semibold))
-                            .foregroundStyle(.treasureGold600)
+                            .foregroundStyle(Color.treasureGold600)
                             .padding(.horizontal, 20)
                             .padding(.vertical, 12)
-                            .background(.treasureGold600.opacity(0.12))
+                            .background(Color.treasureGold600.opacity(0.12))
                             .clipShape(Capsule())
                     }
                     .accessibilityLabel("Create a new garage sale listing")
@@ -138,9 +138,9 @@ struct HomeView: View {
         HStack(spacing: 16) {
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundStyle(.treasureGold600)
+                .foregroundStyle(Color.treasureGold600)
                 .frame(width: 48, height: 48)
-                .background(.treasureGold600.opacity(0.1))
+                .background(Color.treasureGold600.opacity(0.1))
                 .clipShape(Circle())
 
             VStack(alignment: .leading, spacing: 4) {
@@ -171,7 +171,7 @@ struct HomeView: View {
                 Spacer()
                 NavigationLink("See All", destination: BrowseView())
                     .font(.subheadline.weight(.medium))
-                    .foregroundStyle(.treasureGold600)
+                    .foregroundStyle(Color.treasureGold600)
             }
             .padding(.horizontal, 24)
 

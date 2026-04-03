@@ -37,7 +37,7 @@ struct CreateSaleView: View {
 
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 56))
-                    .foregroundStyle(.forestGreen)
+                    .foregroundStyle(Color.forestGreen)
                     .accessibilityHidden(true)
 
                 Text("Your Sale Has Been Listed!")
@@ -57,7 +57,7 @@ struct CreateSaleView: View {
                     VStack(spacing: 12) {
                         HStack(spacing: 8) {
                             Image(systemName: "link")
-                                .foregroundStyle(.forestGreen)
+                                .foregroundStyle(Color.forestGreen)
                             Text(url)
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
@@ -328,11 +328,11 @@ struct CreateSaleView: View {
                 VStack(spacing: 8) {
                     Image(systemName: "photo.on.rectangle.angled")
                         .font(.system(size: 28))
-                        .foregroundStyle(.treasure400)
+                        .foregroundStyle(Color.treasure400)
                     Text("Add Photos")
                         .font(.subheadline)
                         .fontWeight(.medium)
-                        .foregroundStyle(.treasure600)
+                        .foregroundStyle(Color.treasure600)
                     Text("JPG or PNG, up to 5 MB each")
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
@@ -487,7 +487,7 @@ struct CreateSaleView: View {
                 )
                 .datePickerStyle(.compact)
                 .labelsHidden()
-                .tint(.treasure600)
+                .tint(Color.treasure600)
                 .accessibilityLabel("Sale date")
             }
 
@@ -503,7 +503,7 @@ struct CreateSaleView: View {
                     )
                     .datePickerStyle(.compact)
                     .labelsHidden()
-                    .tint(.treasure600)
+                    .tint(Color.treasure600)
                     .accessibilityLabel("Start time")
                 }
 
@@ -518,7 +518,7 @@ struct CreateSaleView: View {
                     )
                     .datePickerStyle(.compact)
                     .labelsHidden()
-                    .tint(.treasure600)
+                    .tint(Color.treasure600)
                     .accessibilityLabel("End time")
                 }
 

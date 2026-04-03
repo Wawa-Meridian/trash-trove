@@ -35,7 +35,7 @@ struct FavoritesView: View {
     private var headerSection: some View {
         HStack(spacing: 8) {
             Image(systemName: "heart.fill")
-                .foregroundStyle(.treasureGold600)
+                .foregroundStyle(Color.treasureGold600)
                 .accessibilityHidden(true)
 
             Text("Your Favorites")
@@ -132,7 +132,7 @@ struct FavoritesView: View {
                     .foregroundStyle(.white)
                     .padding(.horizontal, 24)
                     .padding(.vertical, 12)
-                    .background(.treasureGold600)
+                    .background(Color.treasureGold600)
                     .clipShape(Capsule())
             }
             .accessibilityLabel("Browse garage sales")

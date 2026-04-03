@@ -47,10 +47,10 @@ struct SettingsView: View {
                     }
                 } icon: {
                     Image(systemName: "bell.badge")
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                 }
             }
-            .tint(.treasureGold600)
+            .tint(Color.treasureGold600)
             .accessibilityLabel("Sale reminders")
             .accessibilityHint("Toggle notifications for nearby garage sales")
         } header: {
@@ -71,22 +71,22 @@ struct SettingsView: View {
                     Text("Default Radius")
                 } icon: {
                     Image(systemName: "circle.dashed")
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                 }
             }
             .accessibilityLabel("Default search radius")
 
             Picker(selection: $defaultState) {
                 Text("All States").tag("")
-                ForEach(USState.allStates) { state in
-                    Text(state.name).tag(state.code)
+                ForEach(US_STATE_CODES, id: \.self) { code in
+                    Text(US_STATES[code] ?? code).tag(code)
                 }
             } label: {
                 Label {
                     Text("Default State")
                 } icon: {
                     Image(systemName: "map")
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                 }
             }
             .accessibilityLabel("Default state filter")
@@ -158,7 +158,7 @@ struct SettingsView: View {
                     Text("Privacy Policy")
                 } icon: {
                     Image(systemName: "hand.raised")
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                 }
             }
             .accessibilityLabel("View privacy policy")
@@ -170,7 +170,7 @@ struct SettingsView: View {
                     Text("Terms of Service")
                 } icon: {
                     Image(systemName: "doc.text")
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                 }
             }
             .accessibilityLabel("View terms of service")
@@ -188,7 +188,7 @@ struct SettingsView: View {
                     Text("Version")
                 } icon: {
                     Image(systemName: "info.circle")
-                        .foregroundStyle(.treasureGold600)
+                        .foregroundStyle(Color.treasureGold600)
                 }
                 Spacer()
                 Text(appVersion)
@@ -203,7 +203,7 @@ struct SettingsView: View {
                             .foregroundStyle(.primary)
                     } icon: {
                         Image(systemName: "star")
-                            .foregroundStyle(.treasureGold600)
+                            .foregroundStyle(Color.treasureGold600)
                     }
                 }
                 .accessibilityLabel("Rate TrashTrove on the App Store")
@@ -216,7 +216,7 @@ struct SettingsView: View {
                             .foregroundStyle(.primary)
                     } icon: {
                         Image(systemName: "envelope")
-                            .foregroundStyle(.treasureGold600)
+                            .foregroundStyle(Color.treasureGold600)
                     }
                 }
                 .accessibilityLabel("Send feedback via email")

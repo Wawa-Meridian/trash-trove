@@ -179,7 +179,7 @@ struct NearbyView: View {
         } label: {
             Text("\(miles) mi")
                 .font(.subheadline.weight(.semibold))
-                .foregroundStyle(viewModel.radius == miles ? .white : .treasureGold600)
+                .foregroundStyle(viewModel.radius == miles ? .white : Color.treasureGold600)
                 .padding(.horizontal, 20)
                 .padding(.vertical, 10)
                 .background(viewModel.radius == miles ? Color.treasureGold600 : Color.treasureGold600.opacity(0.12))
@@ -226,7 +226,7 @@ struct NearbyView: View {
                                 .foregroundStyle(.white)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 4)
-                                .background(.forestGreen.opacity(0.9))
+                                .background(Color.forestGreen.opacity(0.9))
                                 .clipShape(Capsule())
                                 .padding(8)
                         }
@@ -365,4 +365,5 @@ struct NearbyMapView: UIViewRepresentable {
 
 #Preview {
     NearbyView()
+        .environmentObject(LocationService())
 }

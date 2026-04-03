@@ -373,7 +373,6 @@ final class SupabaseService: @unchecked Sendable {
             let retryAfter = httpResponse.value(forHTTPHeaderField: "Retry-After").flatMap(Int.init)
             throw SupabaseError.rateLimited(retryAfter: retryAfter)
         case 500...599:
-            let message = (try? decoder.decode(ErrorResponse.self, from: data))?.error ?? "Server error"
             throw SupabaseError.serverError
         default:
             let message = (try? decoder.decode(ErrorResponse.self, from: data))?.error ?? "Unknown error"

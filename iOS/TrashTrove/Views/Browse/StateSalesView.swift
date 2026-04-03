@@ -125,7 +125,7 @@ struct StateSalesView: View {
                 }
             }
             .buttonStyle(.borderedProminent)
-            .tint(.treasureGold600)
+            .tint(Color.treasureGold600)
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -145,7 +145,7 @@ struct StateSalesView: View {
                 .foregroundStyle(.secondary)
             NavigationLink("Browse Other States", destination: BrowseView())
                 .buttonStyle(.borderedProminent)
-                .tint(.treasureGold600)
+                .tint(Color.treasureGold600)
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -182,7 +182,7 @@ struct SaleCardRow: View {
                     .frame(width: 80, height: 80)
                     .overlay {
                         Image(systemName: "tag")
-                            .foregroundStyle(.treasureGold600)
+                            .foregroundStyle(Color.treasureGold600)
                     }
             }
 
@@ -206,10 +206,10 @@ struct SaleCardRow: View {
                         ForEach(sale.categories.prefix(3), id: \.self) { category in
                             Text(category)
                                 .font(.caption2)
-                                .foregroundStyle(.treasureGold600)
+                                .foregroundStyle(Color.treasureGold600)
                                 .padding(.horizontal, 8)
                                 .padding(.vertical, 2)
-                                .background(.treasureGold600.opacity(0.1))
+                                .background(Color.treasureGold600.opacity(0.1))
                                 .clipShape(Capsule())
                         }
                     }

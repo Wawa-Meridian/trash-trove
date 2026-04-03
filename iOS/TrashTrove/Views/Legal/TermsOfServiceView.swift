@@ -196,7 +196,7 @@ struct TermsOfServiceView: View {
     private func bulletPoint(_ text: String) -> some View {
         HStack(alignment: .top, spacing: 8) {
             Text("\u{2022}")
-                .foregroundStyle(.treasureGold600)
+                .foregroundStyle(Color.treasureGold600)
                 .accessibilityHidden(true)
             Text(text)
                 .font(.subheadline)

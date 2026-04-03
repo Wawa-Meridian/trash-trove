@@ -101,7 +101,7 @@ struct SearchView: View {
                 .multilineTextAlignment(.center)
             NavigationLink("Browse by State", destination: BrowseView())
                 .buttonStyle(.borderedProminent)
-                .tint(.treasureGold600)
+                .tint(Color.treasureGold600)
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -112,7 +112,7 @@ struct SearchView: View {
         VStack(spacing: 16) {
             Image(systemName: "text.magnifyingglass")
                 .font(.system(size: 48))
-                .foregroundStyle(.treasureGold600.opacity(0.5))
+                .foregroundStyle(Color.treasureGold600.opacity(0.5))
             Text("Search for Garage Sales")
                 .font(.custom("Georgia", size: 20))
                 .fontWeight(.bold)

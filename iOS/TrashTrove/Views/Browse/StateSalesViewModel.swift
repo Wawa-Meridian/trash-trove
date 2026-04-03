@@ -30,7 +30,7 @@ final class StateSalesViewModel: ObservableObject {
         errorMessage = nil
 
         do {
-            let fetchedSales = try await SupabaseService.shared.fetchSalesByState(stateCode: stateCode)
+            let fetchedSales = try await SupabaseService.shared.fetchSalesByState(stateCode)
             sales = fetchedSales
             cities = extractCities(from: fetchedSales)
             filterByCity(selectedCity)
