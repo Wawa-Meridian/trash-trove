@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { LayoutDashboard, ShoppingBag, MessageSquare, Search, Loader2 } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, MessageSquare, Search, Settings, Loader2 } from 'lucide-react';
 import { useAuth } from '@/components/AuthProvider';
 
 const navItems = [
   { href: '/dashboard', label: 'My Sales', icon: ShoppingBag },
   { href: '/dashboard/messages', label: 'Messages', icon: MessageSquare },
   { href: '/dashboard/saved-searches', label: 'Saved Searches', icon: Search },
+  { href: '/dashboard/settings', label: 'Settings', icon: Settings },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -39,7 +40,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-center gap-3 mb-8">
         <LayoutDashboard size={24} className="text-treasure-600" />
-        <h1 className="font-display text-3xl font-bold text-gray-900">
+        <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-gray-100">
           Dashboard
         </h1>
       </div>
@@ -55,8 +56,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 href={href}
                 className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   isActive
-                    ? 'bg-treasure-100 text-treasure-800'
-                    : 'text-gray-600 hover:bg-gray-100'
+                    ? 'bg-treasure-100 dark:bg-treasure-900/30 text-treasure-800 dark:text-treasure-300'
+                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
                 }`}
               >
                 <Icon size={18} />
