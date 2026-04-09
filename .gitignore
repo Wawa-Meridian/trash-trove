@@ -28,6 +28,15 @@ next-env.d.ts
 # vercel
 .vercel
 
+# private deployment docs
+DEPLOYMENT.md
+
+# supabase CLI scratch state (per-developer, not project state)
+supabase/.temp/
+
+# brand / logo exploration assets (not shipped)
+public/logo-concepts/
+
 # capacitor native builds
 ios/App/Pods/
 android/.gradle/
