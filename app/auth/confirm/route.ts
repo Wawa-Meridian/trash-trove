@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseServer } from '@/lib/supabase-server';
+import { SITE_URL } from '@/lib/site-url';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
@@ -11,9 +12,9 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.verifyOtp({ token_hash, type });
 
     if (!error) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
+      return NextResponse.redirect(new URL('/dashboard', SITE_URL));
     }
   }
 
-  return NextResponse.redirect(new URL('/auth/login?error=confirm', request.url));
+  return NextResponse.redirect(new URL('/auth/login?error=confirm', SITE_URL));
 }

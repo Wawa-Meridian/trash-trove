@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Loader2, Mail, Lock, AlertTriangle } from 'lucide-react';
 import { createSupabaseBrowser } from '@/lib/supabase';
+import { absoluteUrl } from '@/lib/site-url';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: absoluteUrl('/auth/callback'),
       },
     });
 

@@ -27,11 +27,18 @@ export default function NativeInit() {
         }
       });
 
-      // Handle deep links
+      // Handle deep links (e.g., OAuth callbacks like
+      // https://trashtrove.xyz/auth/callback?code=...). Preserve the
+      // full path + query + hash so Supabase can exchange the code.
       App.addListener('appUrlOpen', ({ url }) => {
-        const path = new URL(url).pathname;
-        if (path) {
-          window.location.href = path;
+        try {
+          const parsed = new URL(url);
+          const target = `${parsed.pathname}${parsed.search}${parsed.hash}`;
+          if (target && target !== '/') {
+            window.location.href = target;
+          }
+        } catch {
+          // Ignore malformed URLs
         }
       });
     }

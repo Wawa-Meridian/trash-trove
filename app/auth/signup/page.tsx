@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Loader2, Mail, Lock, User, AlertTriangle, CheckCircle } from 'lucide-react';
 import { createSupabaseBrowser } from '@/lib/supabase';
+import { absoluteUrl } from '@/lib/site-url';
 
 export default function SignupPage() {
   const [name, setName] = useState('');
@@ -52,7 +53,7 @@ export default function SignupPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: absoluteUrl('/auth/callback'),
       },
     });
 
