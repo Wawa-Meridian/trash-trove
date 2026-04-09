@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
             marginBottom: 32,
           }}
         >
-          <span style={{ fontSize: 36 }}>🗑️</span>
+          <span style={{ fontSize: 36 }}>🗑</span>
           <span style={{ fontSize: 24, fontWeight: 700, color: '#c76b23' }}>
             TrashTrove
           </span>

@@ -33,7 +33,7 @@ export function contactNotificationHtml({
     <!-- Header -->
     <div style="background-color:#c76b23;border-radius:12px 12px 0 0;padding:24px 32px;text-align:center;">
       <h1 style="margin:0;color:#fff;font-size:20px;font-weight:700;">
-        🗑️ TrashTrove
+        TrashTrove
       </h1>
     </div>
 
