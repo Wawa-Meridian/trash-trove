@@ -91,17 +91,17 @@ export default function SavedSearchesPage() {
 
   return (
     <div>
-      <h2 className="font-display text-xl font-bold text-gray-900 mb-6">
+      <h2 className="font-display text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         Saved Searches
       </h2>
 
       {searches.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-treasure-50 rounded-full">
+        <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-treasure-50 dark:bg-treasure-900/30 rounded-full">
             <Search size={28} className="text-treasure-600" />
           </div>
-          <h3 className="font-semibold text-gray-700 mt-4">No saved searches</h3>
-          <p className="text-gray-500 mt-1 text-sm">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mt-4">No saved searches</h3>
+          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
             Save a search from any browse page to quickly run it again later.
           </p>
         </div>
@@ -110,22 +110,22 @@ export default function SavedSearchesPage() {
           {searches.map((search) => (
             <div
               key={search.id}
-              className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-3"
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4 flex items-center gap-3"
             >
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-gray-900 text-sm">{search.name}</div>
+                <div className="font-semibold text-gray-900 dark:text-gray-100 text-sm">{search.name}</div>
                 <div className="flex flex-wrap gap-1.5 mt-1.5">
                   {search.query && (
-                    <span className="badge bg-blue-100 text-blue-800">"{search.query}"</span>
+                    <span className="badge bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">"{search.query}"</span>
                   )}
                   {search.state && (
-                    <span className="badge bg-treasure-100 text-treasure-800">{search.state}</span>
+                    <span className="badge bg-treasure-100 dark:bg-treasure-900/30 text-treasure-800 dark:text-treasure-300">{search.state}</span>
                   )}
                   {search.city && (
-                    <span className="badge bg-treasure-100 text-treasure-800">{search.city}</span>
+                    <span className="badge bg-treasure-100 dark:bg-treasure-900/30 text-treasure-800 dark:text-treasure-300">{search.city}</span>
                   )}
                   {search.categories?.map((c) => (
-                    <span key={c} className="badge bg-gray-100 text-gray-700">{c}</span>
+                    <span key={c} className="badge bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">{c}</span>
                   ))}
                 </div>
               </div>
@@ -135,8 +135,8 @@ export default function SavedSearchesPage() {
                   onClick={() => toggleNotify(search.id, search.notify_email)}
                   className={`p-2 rounded-lg transition-colors ${
                     search.notify_email
-                      ? 'text-treasure-600 bg-treasure-50'
-                      : 'text-gray-400 hover:bg-gray-100'
+                      ? 'text-treasure-600 bg-treasure-50 dark:bg-treasure-900/30'
+                      : 'text-gray-400 dark:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800'
                   }`}
                   title={search.notify_email ? 'Alerts on' : 'Alerts off'}
                 >
@@ -150,7 +150,7 @@ export default function SavedSearchesPage() {
                 </Link>
                 <button
                   onClick={() => deleteSearch(search.id)}
-                  className="p-2 rounded-lg text-gray-400 hover:bg-red-50 hover:text-red-600"
+                  className="p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600"
                 >
                   <Trash2 size={16} />
                 </button>

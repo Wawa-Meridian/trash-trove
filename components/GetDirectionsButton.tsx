@@ -28,7 +28,7 @@ export default function GetDirectionsButton({ address, city, state, zip, classNa
   return (
     <button
       onClick={handleClick}
-      className={`flex items-center justify-center gap-2 text-sm font-medium text-treasure-700 dark:text-treasure-400 bg-treasure-50 dark:bg-treasure-900/20 hover:bg-treasure-100 dark:hover:bg-treasure-900/30 py-2.5 px-4 rounded-lg transition-colors w-full ${className ?? ''}`}
+      className={`flex items-center justify-center gap-2 text-sm font-medium text-treasure-700 dark:text-treasure-300 bg-treasure-50 dark:bg-treasure-900/30 hover:bg-treasure-100 dark:hover:bg-treasure-900/40 py-2.5 px-4 rounded-lg transition-colors w-full ${className ?? ''}`}
     >
       <Navigation size={16} />
       Get Directions

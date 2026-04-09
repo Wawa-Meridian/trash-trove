@@ -64,13 +64,13 @@ export default function SaleFilters({ basePath, className }: Props) {
   };
 
   return (
-    <div className={`bg-white rounded-xl border border-gray-200 ${className ?? ''}`}>
+    <div className={`bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 ${className ?? ''}`}>
       {/* Toggle bar */}
       <button
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center justify-between px-4 py-3"
       >
-        <span className="flex items-center gap-2 text-sm font-medium text-gray-700">
+        <span className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
           <Filter size={16} />
           Filters
           {hasActiveFilters && (
@@ -79,14 +79,14 @@ export default function SaleFilters({ basePath, className }: Props) {
             </span>
           )}
         </span>
-        {expanded ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+        {expanded ? <ChevronUp size={16} className="text-gray-400 dark:text-gray-500" /> : <ChevronDown size={16} className="text-gray-400 dark:text-gray-500" />}
       </button>
 
       {expanded && (
-        <div className="px-4 pb-4 space-y-5 border-t border-gray-100 pt-4">
+        <div className="px-4 pb-4 space-y-5 border-t border-gray-100 dark:border-gray-700 pt-4">
           {/* Categories */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Categories
             </label>
             <div className="flex flex-wrap gap-2">
@@ -97,7 +97,7 @@ export default function SaleFilters({ basePath, className }: Props) {
                   className={`px-3 py-1 rounded-full text-xs font-medium border transition-all ${
                     selectedCategories.includes(cat)
                       ? 'bg-treasure-600 text-white border-treasure-600'
-                      : 'bg-white text-gray-600 border-gray-300 hover:border-treasure-400'
+                      : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:border-treasure-400'
                   }`}
                 >
                   {cat}
@@ -108,7 +108,7 @@ export default function SaleFilters({ basePath, className }: Props) {
 
           {/* Date range */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Date Range
             </label>
             <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@ export default function SaleFilters({ basePath, className }: Props) {
                 className="input-field text-sm flex-1"
                 placeholder="From"
               />
-              <span className="text-gray-400 text-sm">to</span>
+              <span className="text-gray-400 dark:text-gray-500 text-sm">to</span>
               <input
                 type="date"
                 value={dateTo}
@@ -132,12 +132,12 @@ export default function SaleFilters({ basePath, className }: Props) {
 
           {/* Price range */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Price Range
             </label>
             <div className="flex items-center gap-2">
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm">$</span>
                 <input
                   type="number"
                   min="0"
@@ -147,9 +147,9 @@ export default function SaleFilters({ basePath, className }: Props) {
                   placeholder="Min"
                 />
               </div>
-              <span className="text-gray-400 text-sm">to</span>
+              <span className="text-gray-400 dark:text-gray-500 text-sm">to</span>
               <div className="relative flex-1">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm">$</span>
                 <input
                   type="number"
                   min="0"
@@ -167,7 +167,7 @@ export default function SaleFilters({ basePath, className }: Props) {
                 onChange={(e) => updateFilters({ freeItems: e.target.checked ? 'true' : null })}
                 className="rounded border-gray-300 text-treasure-600 focus:ring-treasure-500"
               />
-              <span className="text-sm text-gray-600">Has free items</span>
+              <span className="text-sm text-gray-600 dark:text-gray-300">Has free items</span>
             </label>
           </div>
 

@@ -88,21 +88,21 @@ export default function AdminReportsPage() {
 
   return (
     <div>
-      <h2 className="font-display text-xl font-bold text-gray-900 mb-6">
+      <h2 className="font-display text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         Reports ({reports.length})
       </h2>
 
       {reports.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
-          <Flag size={32} className="mx-auto text-gray-300 mb-3" />
-          <p className="text-gray-500">No reports to review</p>
+        <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
+          <Flag size={32} className="mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+          <p className="text-gray-500 dark:text-gray-400">No reports to review</p>
         </div>
       ) : (
         <div className="space-y-3">
           {reports.map((report) => (
             <div
               key={report.id}
-              className="bg-white rounded-xl border border-gray-200 p-4"
+              className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">
@@ -110,13 +110,13 @@ export default function AdminReportsPage() {
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${reasonColors[report.reason] ?? reasonColors.other}`}>
                       {report.reason}
                     </span>
-                    <span className="text-xs text-gray-400">
+                    <span className="text-xs text-gray-400 dark:text-gray-500">
                       {formatDistanceToNow(parseISO(report.created_at), { addSuffix: true })}
                     </span>
                   </div>
                   <Link
                     href={`/sale/${report.sale.id}`}
-                    className="font-semibold text-gray-900 hover:text-treasure-600 flex items-center gap-1"
+                    className="font-semibold text-gray-900 dark:text-gray-100 hover:text-treasure-600 flex items-center gap-1"
                   >
                     {report.sale.title}
                     <ExternalLink size={14} />

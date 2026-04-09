@@ -79,7 +79,7 @@ export default function MessagesPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-display text-xl font-bold text-gray-900">
+        <h2 className="font-display text-xl font-bold text-gray-900 dark:text-gray-100">
           Messages
           {unreadCount > 0 && (
             <span className="ml-2 text-sm font-normal text-treasure-600">
@@ -90,12 +90,12 @@ export default function MessagesPage() {
       </div>
 
       {messages.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-treasure-50 rounded-full">
+        <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-treasure-50 dark:bg-treasure-900/30 rounded-full">
             <Mail size={28} className="text-treasure-600" />
           </div>
-          <h3 className="font-semibold text-gray-700 mt-4">No messages yet</h3>
-          <p className="text-gray-500 mt-1 text-sm">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mt-4">No messages yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
             When someone contacts you about a sale, their messages will appear here.
           </p>
         </div>
@@ -104,32 +104,32 @@ export default function MessagesPage() {
           {messages.map((msg) => (
             <div
               key={msg.id}
-              className={`bg-white rounded-xl border p-4 transition-colors ${
+              className={`bg-white dark:bg-gray-900 rounded-xl border p-4 transition-colors ${
                 msg.is_read
-                  ? 'border-gray-200'
-                  : 'border-treasure-300 bg-treasure-50/30'
+                  ? 'border-gray-200 dark:border-gray-700'
+                  : 'border-treasure-300 dark:border-treasure-700 bg-treasure-50/30 dark:bg-treasure-900/20'
               }`}
               onClick={() => !msg.is_read && markAsRead(msg.id)}
             >
               <div className="flex items-start gap-3">
                 <div className="mt-0.5">
                   {msg.is_read ? (
-                    <MailOpen size={18} className="text-gray-400" />
+                    <MailOpen size={18} className="text-gray-400 dark:text-gray-500" />
                   ) : (
                     <Mail size={18} className="text-treasure-600" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-semibold text-gray-900 text-sm">
+                    <span className="font-semibold text-gray-900 dark:text-gray-100 text-sm">
                       {msg.sender_name}
                     </span>
-                    <span className="text-xs text-gray-400 flex items-center gap-1 flex-shrink-0">
+                    <span className="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1 flex-shrink-0">
                       <Clock size={12} />
                       {formatDistanceToNow(parseISO(msg.created_at), { addSuffix: true })}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500 mt-0.5">
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                     Re:{' '}
                     <Link
                       href={`/sale/${msg.sale.id}`}
@@ -138,7 +138,7 @@ export default function MessagesPage() {
                       {msg.sale.title}
                     </Link>
                   </div>
-                  <p className="text-sm text-gray-600 mt-2 whitespace-pre-line">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2 whitespace-pre-line">
                     {msg.message}
                   </p>
                   <a

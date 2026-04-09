@@ -75,7 +75,7 @@ export default function NearbyPage() {
         <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Finding Sales Near You
         </h1>
-        <p className="text-gray-500">Requesting your location...</p>
+        <p className="text-gray-500 dark:text-gray-400">Requesting your location...</p>
       </div>
     );
   }
@@ -84,11 +84,11 @@ export default function NearbyPage() {
   if (status === 'denied') {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <MapPinOff size={48} className="text-gray-400 mx-auto mb-4" />
+        <MapPinOff size={48} className="text-gray-400 dark:text-gray-500 mx-auto mb-4" />
         <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Location Access Required
         </h1>
-        <p className="text-gray-500 max-w-md mx-auto mb-6">
+        <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
           Location access is needed to find sales near you. Please enable location
           in your browser settings.
         </p>
@@ -105,7 +105,7 @@ export default function NearbyPage() {
       <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
         Garage Sales Near You
       </h1>
-      <p className="text-gray-500 mb-6">
+      <p className="text-gray-500 dark:text-gray-400 mb-6">
         {fetching
           ? 'Searching for nearby sales...'
           : `${sales.length} sale${sales.length !== 1 ? 's' : ''} within ${radius} miles`}
@@ -175,11 +175,11 @@ export default function NearbyPage() {
       {/* Empty state */}
       {!fetching && !error && sales.length === 0 && (
         <div className="text-center py-16">
-          <MapPinOff size={48} className="text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-400 text-lg mb-2">
+          <MapPinOff size={48} className="text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
             No garage sales found within {radius} miles
           </p>
-          <p className="text-gray-400 text-sm mb-6">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
             Try expanding your search radius or browse sales by location.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

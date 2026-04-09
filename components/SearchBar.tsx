@@ -63,7 +63,7 @@ export default function SearchBar({ className }: SearchBarProps) {
       <div className="relative">
         <Search
           size={18}
-          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-treasure-400 pointer-events-none"
+          className="absolute left-3.5 top-1/2 -translate-y-1/2 text-treasure-500 dark:text-treasure-400 pointer-events-none"
         />
         <input
           type="text"
@@ -76,7 +76,7 @@ export default function SearchBar({ className }: SearchBarProps) {
           <button
             type="button"
             onClick={handleClear}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
             aria-label="Clear search"
           >
             <X size={18} />

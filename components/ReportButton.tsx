@@ -88,7 +88,7 @@ export default function ReportButton({ saleId }: ReportButtonProps) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-500 transition-colors"
+        className="flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors"
       >
         <Flag size={16} />
         Report
@@ -103,7 +103,7 @@ export default function ReportButton({ saleId }: ReportButtonProps) {
           >
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label="Close"
             >
               <X size={20} />

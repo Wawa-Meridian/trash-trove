@@ -79,7 +79,7 @@ export default function SaveSearchButton({ state, city, className }: Props) {
         </button>
         <button
           onClick={() => setShowInput(false)}
-          className="text-xs text-gray-500 hover:text-gray-700"
+          className="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
         >
           Cancel
         </button>
@@ -90,7 +90,7 @@ export default function SaveSearchButton({ state, city, className }: Props) {
   return (
     <button
       onClick={() => setShowInput(true)}
-      className={`flex items-center gap-1.5 text-sm text-gray-500 hover:text-treasure-600 font-medium ${className ?? ''}`}
+      className={`flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 hover:text-treasure-600 dark:hover:text-treasure-400 font-medium ${className ?? ''}`}
     >
       <Bookmark size={16} />
       Save Search

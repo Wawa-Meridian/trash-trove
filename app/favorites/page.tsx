@@ -80,7 +80,7 @@ export default function FavoritesPage() {
         </div>
       ) : (
         <div className="text-center py-20">
-          <Heart size={48} className="mx-auto text-gray-300 mb-4" />
+          <Heart size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
           <h2 className="font-display text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
             No favorites yet
           </h2>

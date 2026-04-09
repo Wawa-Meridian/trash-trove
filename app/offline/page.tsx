@@ -6,7 +6,7 @@ export default function OfflinePage() {
   return (
     <div className="max-w-lg mx-auto px-4 py-24 text-center">
       <div className="inline-flex items-center justify-center w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full mb-6">
-        <WifiOff size={32} className="text-gray-400" />
+        <WifiOff size={32} className="text-gray-400 dark:text-gray-500" />
       </div>
       <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">
         You&apos;re Offline

@@ -12,7 +12,7 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
   return (
     <Link href={`/sale/${sale.id}`} className="card group">
       {/* Photo */}
-      <div className="aspect-[4/3] bg-gray-100 relative overflow-hidden">
+      <div className="aspect-[4/3] bg-gray-100 dark:bg-gray-800 relative overflow-hidden">
         {coverPhoto ? (
           <img
             src={coverPhoto}
@@ -20,7 +20,7 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-300">
+          <div className="w-full h-full flex items-center justify-center text-gray-300 dark:text-gray-600">
             <ImageIcon size={48} />
           </div>
         )}
@@ -42,7 +42,7 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
 
       {/* Details */}
       <div className="p-4">
-        <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-treasure-700 transition-colors line-clamp-1">
+        <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-treasure-700 dark:group-hover:text-treasure-400 transition-colors line-clamp-1">
           {sale.title}
         </h3>
 
@@ -81,12 +81,12 @@ export default function SaleCard({ sale }: { sale: GarageSale }) {
 
         {/* Price indicator */}
         {(sale.price_min != null || sale.price_max != null || sale.has_free_items) && (
-          <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+          <div className="mt-2 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
             {sale.price_min != null && sale.price_max != null && (
               <span>${(sale.price_min / 100).toFixed(0)} - ${(sale.price_max / 100).toFixed(0)}</span>
             )}
             {sale.has_free_items && (
-              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded-full">Free items!</span>
+              <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-1.5 py-0.5 rounded-full">Free items!</span>
             )}
           </div>
         )}

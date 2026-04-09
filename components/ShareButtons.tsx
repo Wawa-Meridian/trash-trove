@@ -62,7 +62,7 @@ export default function ShareButtons({ title, url }: ShareButtonsProps) {
 
   return (
     <div className="flex items-center gap-2 mt-3">
-      <Share2 size={16} className="text-gray-400" />
+      <Share2 size={16} className="text-gray-400 dark:text-gray-500" />
       <button type="button" onClick={copyToClipboard} className={btnClass}>
         <Link2 size={14} />
         {copied ? 'Copied!' : 'Copy Link'}

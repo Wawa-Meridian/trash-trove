@@ -78,14 +78,14 @@ export default function AdminSalesPage() {
 
   return (
     <div>
-      <h2 className="font-display text-xl font-bold text-gray-900 mb-6">
+      <h2 className="font-display text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         All Sales ({sales.length})
       </h2>
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
           <input
             type="text"
             placeholder="Search by title or city..."
@@ -109,19 +109,19 @@ export default function AdminSalesPage() {
         {filtered.map((sale) => (
           <div
             key={sale.id}
-            className={`bg-white rounded-lg border p-3 flex items-center gap-3 ${
-              sale.is_active ? 'border-gray-200' : 'border-red-200 bg-red-50/50'
+            className={`bg-white dark:bg-gray-900 rounded-lg border p-3 flex items-center gap-3 ${
+              sale.is_active ? 'border-gray-200 dark:border-gray-700' : 'border-red-200 dark:border-red-900 bg-red-50/50 dark:bg-red-900/20'
             }`}
           >
             <div className="flex-1 min-w-0">
               <Link
                 href={`/sale/${sale.id}`}
-                className="font-medium text-sm text-gray-900 hover:text-treasure-600 flex items-center gap-1"
+                className="font-medium text-sm text-gray-900 dark:text-gray-100 hover:text-treasure-600 flex items-center gap-1"
               >
                 <span className="truncate">{sale.title}</span>
                 <ExternalLink size={12} className="flex-shrink-0" />
               </Link>
-              <div className="text-xs text-gray-500 mt-0.5">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                 {sale.city}, {sale.state} · {format(parseISO(sale.sale_date), 'MMM d, yyyy')}
               </div>
             </div>
@@ -137,7 +137,7 @@ export default function AdminSalesPage() {
             <button
               onClick={() => toggleActive(sale.id, sale.is_active)}
               disabled={actionLoading === sale.id}
-              className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 disabled:opacity-50"
+              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 disabled:opacity-50"
               title={sale.is_active ? 'Deactivate' : 'Reactivate'}
             >
               {actionLoading === sale.id ? (

@@ -98,28 +98,28 @@ export default function AdminAnalyticsPage() {
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {statCards.map(({ label, value, icon: Icon, color }) => (
-          <div key={label} className="bg-white rounded-xl border border-gray-200 p-4">
+          <div key={label} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-4">
             <div className={`inline-flex items-center justify-center w-10 h-10 rounded-lg ${color} mb-3`}>
               <Icon size={20} />
             </div>
-            <div className="text-2xl font-bold text-gray-900">{value.toLocaleString()}</div>
-            <div className="text-sm text-gray-500">{label}</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{value.toLocaleString()}</div>
+            <div className="text-sm text-gray-500 dark:text-gray-400">{label}</div>
           </div>
         ))}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Top states */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Top States</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Top States</h3>
           {stats.topStates.length === 0 ? (
-            <p className="text-sm text-gray-500">No data yet</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">No data yet</p>
           ) : (
             <div className="space-y-2">
               {stats.topStates.map(({ state, count }) => (
                 <div key={state} className="flex items-center justify-between text-sm">
-                  <span className="text-gray-700">{state}</span>
-                  <span className="font-medium text-gray-900">{count}</span>
+                  <span className="text-gray-700 dark:text-gray-300">{state}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{count}</span>
                 </div>
               ))}
             </div>
@@ -127,16 +127,16 @@ export default function AdminAnalyticsPage() {
         </div>
 
         {/* Top categories */}
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Top Categories</h3>
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-5">
+          <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-4">Top Categories</h3>
           {stats.topCategories.length === 0 ? (
-            <p className="text-sm text-gray-500">No data yet</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">No data yet</p>
           ) : (
             <div className="space-y-2">
               {stats.topCategories.map(({ category, count }) => (
                 <div key={category} className="flex items-center justify-between text-sm">
-                  <span className="text-gray-700">{category}</span>
-                  <span className="font-medium text-gray-900">{count}</span>
+                  <span className="text-gray-700 dark:text-gray-300">{category}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{count}</span>
                 </div>
               ))}
             </div>

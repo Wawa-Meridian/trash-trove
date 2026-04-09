@@ -78,7 +78,7 @@ export default function ContactForm({ saleId, sellerName }: ContactFormProps) {
         </h3>
         <button
           onClick={() => setIsOpen(false)}
-          className="text-gray-400 hover:text-gray-600"
+          className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
           aria-label="Close contact form"
         >
           <X size={18} />

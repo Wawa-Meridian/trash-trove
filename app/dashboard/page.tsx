@@ -64,7 +64,7 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h2 className="font-display text-xl font-bold text-gray-900">
+        <h2 className="font-display text-xl font-bold text-gray-900 dark:text-gray-100">
           My Sales
         </h2>
         <Link href="/create" className="btn-primary flex items-center gap-2 text-sm">
@@ -74,10 +74,10 @@ export default function DashboardPage() {
       </div>
 
       {sales.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
+        <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700">
           <ShoppingBagEmpty />
-          <h3 className="font-semibold text-gray-700 mt-4">No sales yet</h3>
-          <p className="text-gray-500 mt-1 text-sm">
+          <h3 className="font-semibold text-gray-700 dark:text-gray-300 mt-4">No sales yet</h3>
+          <p className="text-gray-500 dark:text-gray-400 mt-1 text-sm">
             Create your first garage sale listing to get started.
           </p>
           <Link href="/create" className="btn-primary inline-flex items-center gap-2 mt-4">
@@ -94,14 +94,14 @@ export default function DashboardPage() {
             return (
               <div
                 key={sale.id}
-                className={`bg-white rounded-xl border p-4 flex items-center gap-4 ${
+                className={`bg-white dark:bg-gray-900 rounded-xl border p-4 flex items-center gap-4 ${
                   !sale.is_active || expired
-                    ? 'border-gray-200 opacity-60'
-                    : 'border-gray-200 hover:border-treasure-300'
+                    ? 'border-gray-200 dark:border-gray-700 opacity-60'
+                    : 'border-gray-200 dark:border-gray-700 hover:border-treasure-300'
                 } transition-colors`}
               >
                 {/* Thumbnail */}
-                <div className="w-16 h-16 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                <div className="w-16 h-16 rounded-lg bg-gray-100 dark:bg-gray-800 overflow-hidden flex-shrink-0">
                   {sale.photos?.[0] ? (
                     <img
                       src={sale.photos[0].url}
@@ -119,11 +119,11 @@ export default function DashboardPage() {
                 <div className="flex-1 min-w-0">
                   <Link
                     href={`/sale/${sale.id}`}
-                    className="font-semibold text-gray-900 hover:text-treasure-600 truncate block"
+                    className="font-semibold text-gray-900 dark:text-gray-100 hover:text-treasure-600 truncate block"
                   >
                     {sale.title}
                   </Link>
-                  <div className="flex items-center gap-3 text-sm text-gray-500 mt-1">
+                  <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-1">
                     <span className="flex items-center gap-1">
                       <MapPin size={14} />
                       {sale.city}, {sale.state}
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                     </span>
                   )}
                   {sale.is_active && expired && (
-                    <span className="text-xs text-gray-400 mt-1 block">Expired</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500 mt-1 block">Expired</span>
                   )}
                 </div>
 
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/sale/${sale.id}/manage`}
-                      className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-treasure-600 transition-colors"
+                      className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-treasure-600 transition-colors"
                       title="Edit"
                     >
                       <Edit size={18} />
@@ -157,7 +157,7 @@ export default function DashboardPage() {
                     <button
                       onClick={() => handleDelete(sale.id)}
                       disabled={deletingSaleId === sale.id}
-                      className="p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-50"
+                      className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-colors disabled:opacity-50"
                       title="Delete"
                     >
                       {deletingSaleId === sale.id ? (
@@ -179,7 +179,7 @@ export default function DashboardPage() {
 
 function ShoppingBagEmpty() {
   return (
-    <div className="inline-flex items-center justify-center w-16 h-16 bg-treasure-50 rounded-full">
+    <div className="inline-flex items-center justify-center w-16 h-16 bg-treasure-50 dark:bg-treasure-900/30 rounded-full">
       <span className="text-3xl">🏷️</span>
     </div>
   );
