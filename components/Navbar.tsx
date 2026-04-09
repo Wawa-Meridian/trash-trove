@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Menu, X, MapPin, Plus, Heart, Locate, LayoutDashboard, LogIn, LogOut, User } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
 import ThemeToggle from '@/components/ThemeToggle';
+import Logo from '@/components/Logo';
 import { useAuth } from '@/components/AuthProvider';
 
 export default function Navbar() {
@@ -23,8 +24,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl">🗑️</span>
-            <span className="font-display text-xl font-bold text-treasure-800">
+            <Logo size={28} />
+            <span className="font-display text-xl font-bold text-treasure-800 dark:text-treasure-200">
               TrashTrove
             </span>
           </Link>
@@ -33,14 +34,14 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-6">
             <Link
               href="/nearby"
-              className="flex items-center gap-1.5 text-gray-600 hover:text-treasure-700 transition-colors"
+              className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-treasure-700 dark:hover:text-treasure-400 transition-colors"
             >
               <Locate size={18} />
               Near Me
             </Link>
             <Link
               href="/browse"
-              className="flex items-center gap-1.5 text-gray-600 hover:text-treasure-700 transition-colors"
+              className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-treasure-700 dark:hover:text-treasure-400 transition-colors"
             >
               <MapPin size={18} />
               Browse Sales
@@ -48,7 +49,7 @@ export default function Navbar() {
             <SearchBar className="w-64" />
             <Link
               href="/favorites"
-              className="flex items-center gap-1.5 text-gray-600 hover:text-treasure-700 transition-colors"
+              className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-treasure-700 dark:hover:text-treasure-400 transition-colors"
             >
               <Heart size={18} />
               Favorites
@@ -66,10 +67,10 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                   >
-                    <div className="w-7 h-7 rounded-full bg-treasure-100 flex items-center justify-center">
-                      <User size={14} className="text-treasure-700" />
+                    <div className="w-7 h-7 rounded-full bg-treasure-100 dark:bg-treasure-900/30 flex items-center justify-center">
+                      <User size={14} className="text-treasure-700 dark:text-treasure-300" />
                     </div>
                     <span className="text-sm font-medium max-w-[100px] truncate">
                       {user.user_metadata?.full_name?.split(' ')[0] ?? 'Account'}
@@ -82,10 +83,10 @@ export default function Navbar() {
                         className="fixed inset-0 z-40"
                         onClick={() => setShowUserMenu(false)}
                       />
-                      <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
+                      <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
                         <Link
                           href="/dashboard"
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50"
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
                           onClick={() => setShowUserMenu(false)}
                         >
                           <LayoutDashboard size={16} />
@@ -93,7 +94,7 @@ export default function Navbar() {
                         </Link>
                         <button
                           onClick={handleSignOut}
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 w-full"
+                          className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 w-full"
                         >
                           <LogOut size={16} />
                           Sign Out
@@ -105,7 +106,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/auth/login"
-                  className="flex items-center gap-1.5 text-gray-600 hover:text-treasure-700 transition-colors text-sm font-medium"
+                  className="flex items-center gap-1.5 text-gray-600 dark:text-gray-300 hover:text-treasure-700 dark:hover:text-treasure-400 transition-colors text-sm font-medium"
                 >
                   <LogIn size={18} />
                   Sign In
@@ -130,7 +131,7 @@ export default function Navbar() {
           <div className="md:hidden pb-4 space-y-2">
             <Link
               href="/nearby"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-treasure-50 dark:hover:bg-gray-800"
               onClick={() => setIsOpen(false)}
             >
               <Locate size={18} />
@@ -138,7 +139,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/browse"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-treasure-50 dark:hover:bg-gray-800"
               onClick={() => setIsOpen(false)}
             >
               <MapPin size={18} />
@@ -146,7 +147,7 @@ export default function Navbar() {
             </Link>
             <Link
               href="/favorites"
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"
+              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-treasure-50 dark:hover:bg-gray-800"
               onClick={() => setIsOpen(false)}
             >
               <Heart size={18} />
@@ -167,7 +168,7 @@ export default function Navbar() {
                 <>
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-treasure-50 dark:hover:bg-gray-800"
                     onClick={() => setIsOpen(false)}
                   >
                     <LayoutDashboard size={18} />
@@ -184,7 +185,7 @@ export default function Navbar() {
               ) : (
                 <Link
                   href="/auth/login"
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:bg-treasure-50"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-treasure-50 dark:hover:bg-gray-800"
                   onClick={() => setIsOpen(false)}
                 >
                   <LogIn size={18} />
