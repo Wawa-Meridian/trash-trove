@@ -7,8 +7,7 @@ const config: CapacitorConfig = {
   // since the app has server-side API routes.
   webDir: 'public',
   server: {
-    // Point to the deployed app URL. Change this to your production URL.
-    url: 'https://trashtrove.app',
+    url: 'https://trashtrove.xyz',
     cleartext: false,
   },
   plugins: {
