@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ChevronRight, MapPin, Clock, Calendar, User, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
+import { ChevronRight, MapPin, Clock, Calendar, User, ChevronLeft, ChevronRight as ChevronRightIcon, CheckCircle } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { createSupabaseServer } from '@/lib/supabase-server';
 import { US_STATES } from '@/lib/types';
@@ -16,6 +16,7 @@ import GetDirectionsButton from '@/components/GetDirectionsButton';
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }
 
 async function getSale(id: string) {
@@ -75,8 +76,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return metadata;
 }
 
-export default async function SaleDetailPage({ params }: Props) {
+export default async function SaleDetailPage({ params, searchParams }: Props) {
   const { id } = await params;
+  const sp = await searchParams;
+  const justCreated = sp.created === 'true';
   const sale = await getSale(id);
 
   if (!sale) notFound();
@@ -92,8 +95,21 @@ export default async function SaleDetailPage({ params }: Props) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {justCreated && (
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-5 mb-6 flex items-center gap-3">
+          <CheckCircle size={22} className="text-green-600 dark:text-green-400 flex-shrink-0" />
+          <div>
+            <p className="font-semibold text-green-800 dark:text-green-300">
+              Your sale is live!
+            </p>
+            <p className="text-sm text-green-600 dark:text-green-400 mt-0.5">
+              Share this page with buyers or post it on social media to get the word out.
+            </p>
+          </div>
+        </div>
+      )}
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-6 flex-wrap">
+      <nav className="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 mb-6 flex-wrap">
         <Link href="/browse" className="hover:text-treasure-600">
           Browse
         </Link>
@@ -133,7 +149,7 @@ export default async function SaleDetailPage({ params }: Props) {
               <FavoriteButton
                 saleId={sale.id}
                 variant="default"
-                className="mt-1 p-2 rounded-full hover:bg-gray-100 transition-colors"
+                className="mt-1 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               />
             </div>
 
@@ -157,10 +173,10 @@ export default async function SaleDetailPage({ params }: Props) {
               <>
                 <div className="flex items-center gap-3 mb-1">
                   <Calendar size={20} className="text-treasure-600" />
-                  <div className="font-semibold text-gray-900">{dateDisplay}</div>
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">{dateDisplay}</div>
                 </div>
                 {saleDates.map((sd: any) => (
-                  <div key={sd.id} className="flex items-center gap-3 pl-8 text-sm text-gray-700">
+                  <div key={sd.id} className="flex items-center gap-3 pl-8 text-sm text-gray-700 dark:text-gray-300">
                     <span className="font-medium">{format(parseISO(sd.sale_date), 'EEE, MMM d')}</span>
                     <span>{sd.start_time} &ndash; {sd.end_time}</span>
                   </div>
@@ -170,11 +186,11 @@ export default async function SaleDetailPage({ params }: Props) {
               <>
                 <div className="flex items-center gap-3">
                   <Calendar size={20} className="text-treasure-600" />
-                  <div className="font-semibold text-gray-900">{dateDisplay}</div>
+                  <div className="font-semibold text-gray-900 dark:text-gray-100">{dateDisplay}</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Clock size={20} className="text-treasure-600" />
-                  <div className="text-gray-700">
+                  <div className="text-gray-700 dark:text-gray-300">
                     {sale.start_time} &ndash; {sale.end_time}
                   </div>
                 </div>
@@ -187,8 +203,8 @@ export default async function SaleDetailPage({ params }: Props) {
             <div className="flex items-start gap-3">
               <MapPin size={20} className="text-treasure-600 mt-0.5" />
               <div>
-                <div className="font-semibold text-gray-900">Address</div>
-                <div className="text-gray-600">
+                <div className="font-semibold text-gray-900 dark:text-gray-100">Address</div>
+                <div className="text-gray-600 dark:text-gray-400">
                   {sale.address}
                   <br />
                   {sale.city}, {sale.state} {sale.zip}
@@ -245,7 +261,7 @@ export default async function SaleDetailPage({ params }: Props) {
       <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
         <Link
           href={`/sale/${sale.id}/flyer`}
-          className="text-sm text-gray-500 hover:text-treasure-600 flex items-center gap-1.5"
+          className="text-sm text-gray-500 dark:text-gray-400 hover:text-treasure-600 flex items-center gap-1.5"
         >
           🖨️ Print Flyer
         </Link>

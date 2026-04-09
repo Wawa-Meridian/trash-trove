@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useDropzone } from 'react-dropzone';
-import { Upload, X, Loader2, CheckCircle, Link as LinkIcon, Plus, Trash2 } from 'lucide-react';
+import { Upload, X, Loader2, CheckCircle, Plus, Trash2 } from 'lucide-react';
 import { SALE_CATEGORIES, US_STATES } from '@/lib/types';
 import { useAuth } from '@/components/AuthProvider';
 
@@ -46,8 +46,6 @@ export default function CreateSalePage() {
   const [previews, setPreviews] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [manageUrl, setManageUrl] = useState<string | null>(null);
-  const [createdId, setCreatedId] = useState<string | null>(null);
 
   // Multi-day dates
   const [saleDates, setSaleDates] = useState<SaleDateRow[]>([
@@ -171,16 +169,12 @@ export default function CreateSalePage() {
 
       const { id, manage_token } = await res.json();
 
-      if (user) {
-        // Authenticated user — go straight to dashboard
-        router.push(`/sale/${id}`);
-      } else if (manage_token) {
+      // Save manage token for anonymous users so they can edit/delete later
+      if (manage_token) {
         localStorage.setItem(`trashtrove_manage_${id}`, manage_token);
-        setManageUrl(`${window.location.origin}/sale/${id}/manage?token=${manage_token}`);
-        setCreatedId(id);
-      } else {
-        router.push(`/sale/${id}`);
       }
+
+      router.push(`/sale/${id}?created=true`);
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to create sale';
       setError(message);
@@ -199,38 +193,6 @@ export default function CreateSalePage() {
       <p className="text-gray-500 dark:text-gray-400 mb-8">
         Share your sale details and let shoppers know what treasures you have.
       </p>
-
-      {manageUrl && createdId && (
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-6 mb-8 space-y-4">
-          <div className="flex items-center gap-2 text-green-800 dark:text-green-300 font-semibold text-lg">
-            <CheckCircle size={22} />
-            Your sale has been listed!
-          </div>
-          <p className="text-green-700 dark:text-green-400 text-sm">
-            Save this link to manage your listing. You can use it to edit or delete your sale later.
-            This is the only way to manage your listing, so keep it safe.
-          </p>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 bg-white dark:bg-gray-800 border border-green-300 dark:border-green-700 rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-gray-300 truncate">
-              <LinkIcon size={14} className="inline mr-2 text-green-600" />
-              {manageUrl}
-            </div>
-            <button
-              type="button"
-              onClick={() => navigator.clipboard.writeText(manageUrl)}
-              className="btn-secondary text-sm whitespace-nowrap"
-            >
-              Copy Link
-            </button>
-          </div>
-          <a
-            href={`/sale/${createdId}`}
-            className="btn-primary inline-flex items-center gap-2 text-sm"
-          >
-            View Your Listing
-          </a>
-        </div>
-      )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
         {/* Basic Info */}
@@ -300,7 +262,7 @@ export default function CreateSalePage() {
         {/* Photos */}
         <section>
           <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-3">
-            Photos <span className="text-gray-400 font-normal">(up to 10)</span>
+            Photos <span className="text-gray-400 dark:text-gray-500 font-normal">(up to 10)</span>
           </h2>
 
           <div
@@ -312,11 +274,11 @@ export default function CreateSalePage() {
             }`}
           >
             <input {...getInputProps()} />
-            <Upload size={32} className="mx-auto text-gray-400 mb-2" />
+            <Upload size={32} className="mx-auto text-gray-400 dark:text-gray-500 mb-2" />
             <p className="text-gray-500 dark:text-gray-400">
               Drag &amp; drop photos here, or click to select
             </p>
-            <p className="text-gray-400 text-sm mt-1">
+            <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">
               JPG, PNG, or WebP up to 5MB each
             </p>
           </div>
@@ -478,7 +440,7 @@ export default function CreateSalePage() {
                   <button
                     type="button"
                     onClick={() => removeDateRow(i)}
-                    className="p-2.5 text-gray-400 hover:text-red-500 transition-colors"
+                    className="p-2.5 text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors"
                     aria-label="Remove this date"
                   >
                     <Trash2 size={16} />
@@ -498,12 +460,12 @@ export default function CreateSalePage() {
         {/* Price Range (optional) */}
         <section className="space-y-4">
           <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100">
-            Price Range <span className="text-gray-400 font-normal">(optional)</span>
+            Price Range <span className="text-gray-400 dark:text-gray-500 font-normal">(optional)</span>
           </h2>
 
           <div className="flex items-center gap-3">
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">$</span>
               <input
                 type="number"
                 min="0"
@@ -514,9 +476,9 @@ export default function CreateSalePage() {
                 placeholder="Min price"
               />
             </div>
-            <span className="text-gray-400">to</span>
+            <span className="text-gray-400 dark:text-gray-500">to</span>
             <div className="relative flex-1">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">$</span>
               <input
                 type="number"
                 min="0"
