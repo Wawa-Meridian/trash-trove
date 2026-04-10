@@ -72,10 +72,10 @@ export default function NearbyPage() {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
         <Loader2 size={40} className="animate-spin text-treasure-600 mx-auto mb-4" />
-        <h1 className="font-display text-2xl font-bold text-gray-900 mb-2">
+        <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Finding Sales Near You
         </h1>
-        <p className="text-gray-500">Requesting your location...</p>
+        <p className="text-gray-500 dark:text-gray-400">Requesting your location...</p>
       </div>
     );
   }
@@ -84,11 +84,11 @@ export default function NearbyPage() {
   if (status === 'denied') {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-        <MapPinOff size={48} className="text-gray-400 mx-auto mb-4" />
-        <h1 className="font-display text-2xl font-bold text-gray-900 mb-2">
+        <MapPinOff size={48} className="text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+        <h1 className="font-display text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Location Access Required
         </h1>
-        <p className="text-gray-500 max-w-md mx-auto mb-6">
+        <p className="text-gray-500 dark:text-gray-400 max-w-md mx-auto mb-6">
           Location access is needed to find sales near you. Please enable location
           in your browser settings.
         </p>
@@ -102,10 +102,10 @@ export default function NearbyPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="font-display text-3xl font-bold text-gray-900 mb-2">
+      <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
         Garage Sales Near You
       </h1>
-      <p className="text-gray-500 mb-6">
+      <p className="text-gray-500 dark:text-gray-400 mb-6">
         {fetching
           ? 'Searching for nearby sales...'
           : `${sales.length} sale${sales.length !== 1 ? 's' : ''} within ${radius} miles`}
@@ -127,7 +127,7 @@ export default function NearbyPage() {
 
       {/* Radius selector */}
       <div className="flex items-center gap-2 mb-8">
-        <span className="text-sm font-medium text-gray-700 mr-1">Radius:</span>
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-1">Radius:</span>
         {RADIUS_OPTIONS.map((r) => (
           <button
             key={r}
@@ -135,7 +135,7 @@ export default function NearbyPage() {
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
               radius === r
                 ? 'bg-treasure-600 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
             {r} mi
@@ -175,11 +175,11 @@ export default function NearbyPage() {
       {/* Empty state */}
       {!fetching && !error && sales.length === 0 && (
         <div className="text-center py-16">
-          <MapPinOff size={48} className="text-gray-300 mx-auto mb-4" />
-          <p className="text-gray-400 text-lg mb-2">
+          <MapPinOff size={48} className="text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
             No garage sales found within {radius} miles
           </p>
-          <p className="text-gray-400 text-sm mb-6">
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
             Try expanding your search radius or browse sales by location.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

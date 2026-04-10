@@ -4,11 +4,14 @@ import { notFound } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import SaleCard from '@/components/SaleCard';
 import SaleMap from '@/components/SaleMap';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServer } from '@/lib/supabase-server';
 import { US_STATES } from '@/lib/types';
+import { applyFilters, type FilterParams } from '@/lib/filters';
+import SaleFilters from '@/components/SaleFilters';
 
 interface Props {
   params: Promise<{ state: string; city: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -25,28 +28,43 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-async function getSalesInCity(state: string, city: string) {
+async function getSalesInCity(state: string, city: string, filters: FilterParams = {}) {
+  const supabase = await createSupabaseServer();
   const today = new Date().toISOString().split('T')[0];
-  const { data } = await supabase
+  let query = supabase
     .from('garage_sales')
-    .select('*, photos:sale_photos(*)')
+    .select('*, photos:sale_photos(*), sale_dates(*)')
     .eq('state', state)
     .ilike('city', city)
     .eq('is_active', true)
-    .gte('sale_date', today)
+    .gte('sale_date', filters.dateFrom ?? today)
     .order('sale_date', { ascending: true });
+
+  query = applyFilters(query, filters);
+
+  const { data } = await query;
   return data ?? [];
 }
 
-export default async function CityPage({ params }: Props) {
+export default async function CityPage({ params, searchParams }: Props) {
   const { state, city: rawCity } = await params;
+  const sp = await searchParams;
   const stateCode = state.toUpperCase();
   const city = decodeURIComponent(rawCity);
   const stateName = US_STATES[stateCode];
 
   if (!stateName) notFound();
 
-  const sales = await getSalesInCity(stateCode, city);
+  const filters: FilterParams = {
+    categories: sp.categories,
+    dateFrom: sp.dateFrom,
+    dateTo: sp.dateTo,
+    priceMin: sp.priceMin,
+    priceMax: sp.priceMax,
+    freeItems: sp.freeItems,
+  };
+
+  const sales = await getSalesInCity(stateCode, city, filters);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -63,12 +81,14 @@ export default async function CityPage({ params }: Props) {
         <span className="text-gray-900 font-medium">{city}</span>
       </nav>
 
-      <h1 className="font-display text-3xl font-bold text-gray-900 mb-2">
+      <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
         Garage Sales in {city}, {stateCode}
       </h1>
       <p className="text-gray-500 mb-8">
         {sales.length} upcoming sale{sales.length !== 1 ? 's' : ''}
       </p>
+
+      <SaleFilters basePath={`/browse/${stateCode}/${encodeURIComponent(city)}`} className="mb-6" />
 
       {/* Map */}
       {sales.length > 0 && (

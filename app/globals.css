@@ -14,17 +14,25 @@ body {
   color: #1a1a1a;
 }
 
+.dark body,
+:is(.dark body) {
+  background-color: #111111;
+  color: #e5e5e5;
+}
+
 @layer components {
   .btn-primary {
     @apply bg-treasure-600 hover:bg-treasure-700 text-white font-medium py-2.5 px-5 rounded-lg transition-colors duration-200;
   }
 
   .btn-secondary {
-    @apply bg-white hover:bg-gray-50 text-treasure-800 font-medium py-2.5 px-5 rounded-lg border border-treasure-200 transition-colors duration-200;
+    @apply bg-white hover:bg-gray-50 text-treasure-800 font-medium py-2.5 px-5 rounded-lg border border-treasure-200 transition-colors duration-200
+           dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-treasure-200 dark:border-gray-600;
   }
 
   .card {
-    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200;
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow duration-200
+           dark:bg-gray-900 dark:border-gray-800;
   }
 
   .badge {
@@ -32,14 +40,17 @@ body {
   }
 
   .badge-category {
-    @apply badge bg-treasure-100 text-treasure-800;
+    @apply badge bg-treasure-100 text-treasure-800
+           dark:bg-treasure-900/30 dark:text-treasure-300;
   }
 
   .badge-weekend {
-    @apply badge bg-forest-100 text-forest-800;
+    @apply badge bg-forest-100 text-forest-800
+           dark:bg-forest-900/30 dark:text-forest-300;
   }
 
   .input-field {
-    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-treasure-400 focus:border-treasure-400 outline-none transition-all;
+    @apply w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-treasure-400 focus:border-treasure-400 outline-none transition-all
+           dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100 dark:focus:ring-treasure-500;
   }
 }

@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServer } from '@/lib/supabase-server';
+import { sendContactNotification } from '@/lib/email';
 
 interface RouteContext {
   params: Promise<{ id: string }>;
 }
 
 export async function POST(req: NextRequest, context: RouteContext) {
+  const supabase = await createSupabaseServer();
   const { id } = await context.params;
   const body = await req.json();
   const { name, email, message } = body;
@@ -52,6 +54,21 @@ export async function POST(req: NextRequest, context: RouteContext) {
       { error: 'Failed to send message. Please try again later.' },
       { status: 500 },
     );
+  }
+
+  // Send email notification (fire-and-forget)
+  try {
+    await sendContactNotification({
+      sellerEmail: sale.seller_email,
+      sellerName: sale.seller_name,
+      saleTitle: sale.title,
+      saleId: sale.id,
+      senderName: name,
+      senderEmail: email,
+      message,
+    });
+  } catch (err) {
+    console.error('Email notification failed:', err);
   }
 
   return NextResponse.json({

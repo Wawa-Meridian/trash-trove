@@ -88,7 +88,7 @@ export default function ReportButton({ saleId }: ReportButtonProps) {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-red-500 transition-colors"
+        className="flex items-center gap-1.5 text-sm text-gray-400 dark:text-gray-500 hover:text-red-500 transition-colors"
       >
         <Flag size={16} />
         Report
@@ -99,20 +99,20 @@ export default function ReportButton({ saleId }: ReportButtonProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div
             ref={modalRef}
-            className="bg-white rounded-xl shadow-xl w-full max-w-md p-6 relative"
+            className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-md p-6 relative"
           >
             <button
               onClick={handleClose}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
               aria-label="Close"
             >
               <X size={20} />
             </button>
 
-            <h3 className="font-display text-lg font-bold text-gray-900 mb-1">
+            <h3 className="font-display text-lg font-bold text-gray-900 dark:text-gray-100 mb-1">
               Report Listing
             </h3>
-            <p className="text-sm text-gray-500 mb-5">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">
               Why are you reporting this listing?
             </p>
 
@@ -136,8 +136,8 @@ export default function ReportButton({ saleId }: ReportButtonProps) {
                       key={reason.value}
                       className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
                         selectedReason === reason.value
-                          ? 'border-treasure-500 bg-treasure-50'
-                          : 'border-gray-200 hover:bg-gray-50'
+                          ? 'border-treasure-500 bg-treasure-50 dark:bg-treasure-900/20'
+                          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                       }`}
                     >
                       <input
@@ -148,7 +148,7 @@ export default function ReportButton({ saleId }: ReportButtonProps) {
                         onChange={() => setSelectedReason(reason.value)}
                         className="accent-treasure-600"
                       />
-                      <span className="text-sm text-gray-700">{reason.label}</span>
+                      <span className="text-sm text-gray-700 dark:text-gray-300">{reason.label}</span>
                     </label>
                   ))}
                 </div>

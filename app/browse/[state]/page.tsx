@@ -4,8 +4,10 @@ import { notFound } from 'next/navigation';
 import { ChevronRight } from 'lucide-react';
 import SaleCard from '@/components/SaleCard';
 import SaleMap from '@/components/SaleMap';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServer } from '@/lib/supabase-server';
 import { US_STATES } from '@/lib/types';
+import { applyFilters, type FilterParams } from '@/lib/filters';
+import SaleFilters from '@/components/SaleFilters';
 
 const US_STATE_CENTERS: Record<string, [number, number]> = {
   AL: [32.806671, -86.791130], AK: [61.370716, -152.404419], AZ: [33.729759, -111.431221],
@@ -29,6 +31,7 @@ const US_STATE_CENTERS: Record<string, [number, number]> = {
 
 interface Props {
   params: Promise<{ state: string }>;
+  searchParams: Promise<Record<string, string | undefined>>;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -45,6 +48,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 async function getCitiesInState(state: string) {
+  const supabase = await createSupabaseServer();
   const today = new Date().toISOString().split('T')[0];
   const { data } = await supabase
     .from('garage_sales')
@@ -64,29 +68,44 @@ async function getCitiesInState(state: string) {
     .sort((a, b) => a.city.localeCompare(b.city));
 }
 
-async function getSalesInState(state: string) {
+async function getSalesInState(state: string, filters: FilterParams = {}) {
+  const supabase = await createSupabaseServer();
   const today = new Date().toISOString().split('T')[0];
-  const { data } = await supabase
+  let query = supabase
     .from('garage_sales')
-    .select('*, photos:sale_photos(*)')
+    .select('*, photos:sale_photos(*), sale_dates(*)')
     .eq('state', state)
     .eq('is_active', true)
-    .gte('sale_date', today)
+    .gte('sale_date', filters.dateFrom ?? today)
     .order('sale_date', { ascending: true })
-    .limit(12);
+    .limit(50);
+
+  query = applyFilters(query, filters);
+
+  const { data } = await query;
   return data ?? [];
 }
 
-export default async function StatePage({ params }: Props) {
+export default async function StatePage({ params, searchParams }: Props) {
   const { state } = await params;
+  const sp = await searchParams;
   const stateCode = state.toUpperCase();
   const stateName = US_STATES[stateCode];
 
   if (!stateName) notFound();
 
+  const filters: FilterParams = {
+    categories: sp.categories,
+    dateFrom: sp.dateFrom,
+    dateTo: sp.dateTo,
+    priceMin: sp.priceMin,
+    priceMax: sp.priceMax,
+    freeItems: sp.freeItems,
+  };
+
   const [cities, sales] = await Promise.all([
     getCitiesInState(stateCode),
-    getSalesInState(stateCode),
+    getSalesInState(stateCode, filters),
   ]);
 
   return (
@@ -97,16 +116,18 @@ export default async function StatePage({ params }: Props) {
           Browse
         </Link>
         <ChevronRight size={14} />
-        <span className="text-gray-900 font-medium">{stateName}</span>
+        <span className="text-gray-900 dark:text-gray-100 font-medium">{stateName}</span>
       </nav>
 
-      <h1 className="font-display text-3xl font-bold text-gray-900 mb-2">
+      <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
         Garage Sales in {stateName}
       </h1>
-      <p className="text-gray-500 mb-8">
+      <p className="text-gray-500 dark:text-gray-400 mb-8">
         {sales.length} upcoming sale{sales.length !== 1 ? 's' : ''} across{' '}
         {cities.length} cit{cities.length !== 1 ? 'ies' : 'y'}
       </p>
+
+      <SaleFilters basePath={`/browse/${stateCode}`} className="mb-6" />
 
       {/* Map */}
       {sales.length > 0 && (
@@ -123,18 +144,18 @@ export default async function StatePage({ params }: Props) {
       {/* Cities */}
       {cities.length > 0 && (
         <div className="mb-10">
-          <h2 className="font-semibold text-lg text-gray-900 mb-4">Cities</h2>
+          <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-4">Cities</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
             {cities.map(({ city, count }) => (
               <Link
                 key={city}
                 href={`/browse/${stateCode}/${encodeURIComponent(city)}`}
-                className="flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:border-treasure-400 hover:bg-treasure-50 transition-all group"
+                className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-treasure-400 hover:bg-treasure-50 dark:hover:bg-treasure-900/20 transition-all group"
               >
-                <span className="font-medium text-gray-700 group-hover:text-treasure-800 text-sm">
+                <span className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-treasure-800 text-sm">
                   {city}
                 </span>
-                <span className="text-xs bg-treasure-100 text-treasure-700 px-2 py-0.5 rounded-full">
+                <span className="text-xs bg-treasure-100 dark:bg-treasure-900/30 text-treasure-700 dark:text-treasure-400 px-2 py-0.5 rounded-full">
                   {count}
                 </span>
               </Link>
@@ -146,7 +167,7 @@ export default async function StatePage({ params }: Props) {
       {/* Sales Grid */}
       {sales.length > 0 ? (
         <div>
-          <h2 className="font-semibold text-lg text-gray-900 mb-4">
+          <h2 className="font-semibold text-lg text-gray-900 dark:text-gray-100 mb-4">
             All Upcoming Sales
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -2,153 +2,142 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Terms of Service',
-  description: 'TrashTrove terms of service — rules and guidelines for using our platform.',
 };
 
 export default function TermsOfServicePage() {
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <h1 className="font-display text-3xl font-bold text-gray-900 mb-2">
+      <h1 className="font-display text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">
         Terms of Service
       </h1>
-      <p className="text-sm text-gray-500 mb-8">Last updated: April 3, 2026</p>
+      <div className="prose prose-gray dark:prose-invert max-w-none space-y-6">
+        <p className="text-sm text-gray-500 dark:text-gray-400">Last updated: March 24, 2026</p>
 
-      <div className="prose prose-gray max-w-none space-y-6">
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            1. Acceptance of Terms
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            By accessing or using TrashTrove (&quot;the Service&quot;), you agree to be bound
-            by these Terms of Service. If you do not agree to these terms, please do not
-            use the Service.
+          <h2>Agreement to Terms</h2>
+          <p>
+            By accessing or using TrashTrove (&ldquo;the Service&rdquo;), you agree to be bound by
+            these Terms of Service. If you do not agree to these terms, do not use the Service.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            2. Description of Service
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            TrashTrove is a free platform that allows users to list and discover local garage
-            sales, yard sales, estate sales, and similar events. We provide a venue for
-            connecting sellers and buyers but are not a party to any transactions.
+          <h2>Description of Service</h2>
+          <p>
+            TrashTrove is a platform that connects garage sale sellers with buyers. We provide
+            tools to list garage sales, browse listings by location, and contact sellers. TrashTrove
+            is a listing platform only — we are not a party to any transaction between buyers and sellers.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            3. User Responsibilities
-          </h2>
-          <p className="text-gray-600 leading-relaxed">When using TrashTrove, you agree to:</p>
-          <ul className="list-disc pl-6 text-gray-600 space-y-1 mt-2">
-            <li>Provide accurate and truthful information in your listings</li>
-            <li>Only list sales at addresses where you have permission to hold a sale</li>
-            <li>Not use the Service for illegal activities or to sell prohibited items</li>
-            <li>Not harass, spam, or send unsolicited messages to other users</li>
-            <li>Not attempt to circumvent rate limits or other security measures</li>
-            <li>Not scrape, crawl, or extract data from the Service without permission</li>
-            <li>Comply with all applicable local, state, and federal laws</li>
+          <h2>User Accounts</h2>
+          <ul>
+            <li>You may create listings with or without an account.</li>
+            <li>If you create an account, you are responsible for maintaining the security of your credentials.</li>
+            <li>You must provide accurate information when creating listings or an account.</li>
+            <li>You must be at least 13 years old to use the Service.</li>
           </ul>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            4. Listing Guidelines
-          </h2>
-          <p className="text-gray-600 leading-relaxed">Listings must not contain:</p>
-          <ul className="list-disc pl-6 text-gray-600 space-y-1 mt-2">
-            <li>Prohibited items (weapons, controlled substances, stolen goods, counterfeit products)</li>
-            <li>Offensive, discriminatory, or hateful content</li>
-            <li>Misleading or fraudulent information</li>
-            <li>Personal information of others without their consent</li>
-            <li>Commercial advertising unrelated to a garage/yard sale</li>
+          <h2>Listing Guidelines</h2>
+          <p>When creating a listing, you agree to:</p>
+          <ul>
+            <li>Provide accurate sale information including address, dates, and times</li>
+            <li>Only list legitimate garage sales, yard sales, estate sales, or moving sales</li>
+            <li>Not list prohibited or illegal items</li>
+            <li>Not post spam, fraudulent, or misleading content</li>
+            <li>Not use the platform for commercial retail operations</li>
           </ul>
-          <p className="text-gray-600 leading-relaxed mt-2">
-            We reserve the right to remove any listing that violates these guidelines without notice.
+          <p>
+            We reserve the right to remove any listing that violates these guidelines or is reported
+            by other users.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            5. Content Ownership
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            You retain ownership of all content you post (text, photos, etc.). By posting
-            content on TrashTrove, you grant us a non-exclusive, royalty-free license to
-            display, distribute, and promote your content in connection with the Service.
-            This license ends when your listing is removed.
+          <h2>Prohibited Conduct</h2>
+          <p>You agree not to:</p>
+          <ul>
+            <li>Use the Service for any illegal purpose</li>
+            <li>Harass, threaten, or abuse other users</li>
+            <li>Post false, misleading, or deceptive listings</li>
+            <li>Scrape, crawl, or use automated tools to access the Service without permission</li>
+            <li>Attempt to circumvent rate limits or security measures</li>
+            <li>Impersonate another person or entity</li>
+            <li>Upload malicious content, viruses, or harmful code</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Content Ownership</h2>
+          <p>
+            You retain ownership of content you post (descriptions, photos, etc.). By posting
+            content to TrashTrove, you grant us a non-exclusive, worldwide, royalty-free license
+            to display, distribute, and promote your content in connection with the Service.
+          </p>
+          <p>
+            Listings are automatically removed after the sale date as part of our weekly
+            cleanup process. You may also delete your listings at any time.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            6. Listing Management
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            When you create a listing, you receive a unique manage link that allows you to
-            edit or delete your listing. You are responsible for keeping this link secure.
-            Listings are automatically removed one week after the sale date.
+          <h2>Disclaimer of Warranties</h2>
+          <p>
+            The Service is provided &ldquo;as is&rdquo; without warranties of any kind. We do not
+            guarantee the accuracy of any listing information. We are not responsible for the
+            quality, safety, or legality of items sold at garage sales listed on our platform.
+          </p>
+          <p>
+            We do not verify the identity of users or the accuracy of listing information.
+            Exercise caution when visiting sale locations or conducting transactions.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            7. Disclaimer of Warranties
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            TrashTrove is provided &quot;as is&quot; and &quot;as available&quot; without
-            warranties of any kind. We do not guarantee the accuracy of listings, the
-            quality of items for sale, or that the Service will be uninterrupted or
-            error-free. We are not responsible for any transactions between users.
+          <h2>Limitation of Liability</h2>
+          <p>
+            To the maximum extent permitted by law, TrashTrove shall not be liable for any
+            indirect, incidental, special, consequential, or punitive damages arising from
+            your use of the Service, including but not limited to any transactions between
+            buyers and sellers.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            8. Limitation of Liability
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            To the maximum extent permitted by law, TrashTrove and its operators shall not
-            be liable for any indirect, incidental, special, consequential, or punitive
-            damages arising from your use of the Service, including but not limited to
-            damages from transactions with other users, loss of data, or service interruptions.
+          <h2>Reporting and Moderation</h2>
+          <p>
+            Users can report listings that violate our guidelines. We review reports and may
+            remove listings or suspend accounts at our discretion. If you believe a listing
+            is fraudulent or inappropriate, use the Report button on the listing page.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            9. Reporting and Enforcement
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            Users can report listings that violate these terms. We review reports and may
-            remove listings or take other action at our discretion. Repeated violations may
-            result in IP-based restrictions.
+          <h2>Termination</h2>
+          <p>
+            We may suspend or terminate your access to the Service at any time, with or without
+            cause. You may stop using the Service and delete your account at any time.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            10. Changes to Terms
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            We may modify these terms at any time. Continued use of the Service after changes
-            are posted constitutes acceptance of the modified terms.
+          <h2>Changes to Terms</h2>
+          <p>
+            We may update these Terms from time to time. Continued use of the Service after
+            changes constitutes acceptance of the updated Terms.
           </p>
         </section>
 
         <section>
-          <h2 className="font-display text-xl font-semibold text-gray-900 mt-8 mb-3">
-            11. Contact
-          </h2>
-          <p className="text-gray-600 leading-relaxed">
-            For questions about these Terms of Service, please contact us at{' '}
-            <a
-              href="mailto:legal@trashtrove.app"
-              className="text-treasure-600 hover:text-treasure-700"
-            >
-              legal@trashtrove.app
-            </a>.
+          <h2>Contact</h2>
+          <p>
+            Questions about these Terms? Contact us at{' '}
+            <a href="mailto:legal@trashtrove.xyz" className="text-treasure-600 hover:text-treasure-700">
+              legal@trashtrove.xyz
+            </a>
           </p>
         </section>
       </div>

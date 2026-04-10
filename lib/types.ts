@@ -1,3 +1,11 @@
+export interface SaleDate {
+  id: string;
+  sale_id: string;
+  sale_date: string;
+  start_time: string;
+  end_time: string;
+}
+
 export interface GarageSale {
   id: string;
   title: string;
@@ -12,9 +20,14 @@ export interface GarageSale {
   sale_date: string;
   start_time: string;
   end_time: string;
+  sale_dates?: SaleDate[];
   photos: SalePhoto[];
   seller_name: string;
   seller_email: string;
+  user_id?: string | null;
+  price_min?: number | null;
+  price_max?: number | null;
+  has_free_items?: boolean;
   created_at: string;
   is_active: boolean;
 }

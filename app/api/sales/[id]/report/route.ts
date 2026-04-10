@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createSupabaseServer } from '@/lib/supabase-server';
 import { rateLimit } from '@/lib/rate-limit';
 
 const VALID_REASONS = ['spam', 'inappropriate', 'scam', 'duplicate', 'other'] as const;
@@ -9,6 +9,7 @@ interface Props {
 }
 
 export async function POST(req: NextRequest, { params }: Props) {
+  const supabase = await createSupabaseServer();
   const { id: saleId } = await params;
 
   // Get reporter IP
